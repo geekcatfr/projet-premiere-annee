@@ -32,3 +32,11 @@ ul {
 .links a {
     margin-left: 24px;
 }
+
+.button {
+    display: flex;
+}
+
+.container {
+    min-height: 100vh;
+}
