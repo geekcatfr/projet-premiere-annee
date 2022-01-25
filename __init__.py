@@ -23,7 +23,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import index
+    from . import index, auth
     app.register_blueprint(index.bp)
+    app.register_blueprint(auth.bp)
 
     return app
