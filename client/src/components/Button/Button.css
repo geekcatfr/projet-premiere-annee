@@ -1,0 +1,11 @@
+.button {
+    color: #fff;
+    background: #0D2B78;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    grid-auto-rows: minmax(100px, auto);
+}
