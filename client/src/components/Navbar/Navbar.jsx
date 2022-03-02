@@ -1,17 +1,23 @@
-import { Link } from "react-router-dom";
+import { Routes, Route, Outlet, Link } from "react-router-dom";
 
 import './Navbar.css'
-import ''
+import logo from './logo-ndlp.png'
 
-function Navbar(){
+export default function Navbar(){
     return (
+        <div>
         <nav>
-            <div>
-                <img src="" alt="Logo du FC Pro"/>
-                <Link to="/">FCPro</Link>
+            <div className="navbar">
+                <div className="navbar-left">
+                    <Link to="/">FC Pro</Link>
+                </div>
+                <div className="navbar-right">
+                   <Link to="/about">A propos</Link>
+                    <Link to="/login"> Se connecter</Link>
+                </div>
             </div>
-        </nav>
+        </nav> 
+        <Outlet />
+        </div>
     )
 }
-
-export default Navbar
