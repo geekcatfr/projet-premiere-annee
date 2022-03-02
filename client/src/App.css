@@ -1,0 +1,10 @@
+div.container {
+  height: calc(100vh - 100px);
+}
+
+.first-page-title {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 96px;
+}
