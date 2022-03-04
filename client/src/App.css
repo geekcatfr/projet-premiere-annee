@@ -8,3 +8,8 @@ div.container {
   font-weight: bold;
   font-size: 96px;
 }
+
+.button {
+  color: #fff;
+  background: #0d2b78;
+}
