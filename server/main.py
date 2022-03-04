@@ -1,6 +1,8 @@
 from typing import Optional
 
 from fastapi import FastAPI
+import json
+import mysql.connector
 
 app = FastAPI()
 
