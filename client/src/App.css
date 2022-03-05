@@ -2,6 +2,13 @@ div.container {
   height: calc(100vh - 100px);
 }
 
+.first-page-content {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .first-page-title {
   font-family: Montserrat;
   font-style: normal;
@@ -10,6 +17,23 @@ div.container {
 }
 
 .button {
+  font-family: "Open Sans", sans-serif;
   color: #fff;
-  background: #0d2b78;
+  background-color: #0d2b78;
+  width: fit-content;
+  padding: 20px;
+}
+
+.about-buttons {
+  display: flex;
+}
+
+.about-buttons > div {
+  margin-right: 24px;
+}
+
+@media screen and (min-width: 400px) {
+  .first-page-title {
+    font-size: 42px;
+  }
 }
