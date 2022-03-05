@@ -13,7 +13,6 @@ input {
   width: fit-content;
   border: 1px solid black;
   border-radius: 22px;
-  height: 22px;
 }
 
 .login {
@@ -31,6 +30,7 @@ input {
 }
 
 input[type="submit"] {
+  padding: 16px;
   background-color: var(--main-blue);
   color: white;
 }
