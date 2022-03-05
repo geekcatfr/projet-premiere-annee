@@ -1,0 +1,36 @@
+form {
+  display: flex;
+  flex-flow: column;
+}
+
+.form-content {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+input {
+  width: fit-content;
+  border: 1px solid black;
+  border-radius: 22px;
+  height: 22px;
+}
+
+.login {
+  align-items: center;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+input[type="submit"] {
+  background-color: var(--main-blue);
+  color: white;
+}
