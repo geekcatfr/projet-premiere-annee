@@ -91,12 +91,17 @@ def init_database(db_conn, db_name):
             init_rows(db_conn, db_name)
             db_conn.database = db_name
 
-def insert_data():
+class Database():
 
-    add_user = ("INSERT INTO users "
-    "(username, password)"
-    "VALUES (%s %s)")
-    pass
+    def __init__(self) -> None:
+        pass
+    
+    def insert_data():
+
+        add_user = ("INSERT INTO users "
+        "(username, password)"
+        "VALUES (%s %s)")
+        pass
 
 config, db_creds = loadCredentials('db_id.json')
 db_name = config['database']
