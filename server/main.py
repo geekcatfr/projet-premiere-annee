@@ -1,11 +1,10 @@
 from typing import Optional
-
 from fastapi import FastAPI
 import json
-import mysql.connector
+
+from db import connect_database
 
 app = FastAPI()
-
 
 @app.get("/")
 def read_root():
