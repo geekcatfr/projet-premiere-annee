@@ -9,13 +9,13 @@ export default function Login() {
       <div className="login">
         <img className="login-logo" src={Logo} alt="Logo NDLP" />
         <h1>Connexion</h1>
-        <form>
+        <form name="login">
           <div className="form-content">
-            <label htmlFor="email">Email :</label>
-            <input type="email" name="email" id="email" required />
+            <label htmlFor="username">Nom d'utilisateur :</label>
+            <input type="text" name="username" id="username" required />
             <label htmlFor="password">Mot de passe :</label>
             <input type="password" name="password" id="password" />
-            <input type="submit" value="Connexion" />
+            <input type="submit" value="Connexion" onClick={sendData} />
           </div>
         </form>
       </div>
