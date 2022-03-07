@@ -1,16 +1,16 @@
 div.container {
   height: calc(100vh - 100px);
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .first-page-content {
+  width: 70%;
   display: flex;
-  justify-content: space-around;
-  align-items: center; 
-}
-
-.container {
-  display:flex;
-  align-items: center;
+  flex-flow: column;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .first-page-title {
@@ -33,7 +33,7 @@ div.container {
   display: flex;
 }
 
-.about-buttons > div {
+.about-buttons > a > .button {
   margin-right: 24px;
 }
 
