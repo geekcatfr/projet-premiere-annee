@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 export default function Formations() {
-  const [error] = useState(null);
+  const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [formations, setFormations] = useState([]);
 
@@ -11,14 +11,28 @@ export default function Formations() {
       .then((result) => {
         console.log(result);
         setIsLoaded(true);
-        setFormations(result.nom);
-      });
+        setFormations(result);
+      },
+      (error) => {
+          setIsLoaded(true);
+          setError(error);
+      }
+    )
   }, []);
+  if (error) {
+    return (
+      <>
+        <p>Erreur en essayant de charger le contenu de la page...</p>
+      </>
+    )
+  }
+  else {
   return (
     <div>
-      <FormationUnit name={formations} desc={formations} />
+      <FormationUnit name={formations.nom} desc={formations.desc} />
     </div>
   );
+  }
 }
 
 function FormationUnit(props) {
