@@ -89,33 +89,51 @@ class DatabaseConnection():
   
 
     def init_database(self):
-        db_cursor = self.conn.cursor()
+        self.db_cursor = self.conn.cursor()
         try:
-            db_cursor.execute(f"USE {self.name}")
-            db_cursor = self.conn.cursor()
+            self.db_cursor.execute(f"USE {self.name}")
+            self.db_cursor = self.conn.cursor()
         except mysql.connector.Error as error:
             if error.errno == errorcode.ER_BAD_DB_ERROR:
                 writeInLog(error)
                 print(f"[NOTE] Database {self.name} doesn't exist. Creating it...")
-                create_database(self.name, db_cursor)
+                create_database(self.name, self.db_cursor)
                 init_rows(self.conn, self.name)
                 self.conn.database = self.name
 
     def insert_row(self, type, **data):
+
         add_user = ("INSERT INTO users "
-        "(username, password)"
-        "VALUES (%s %s)")
+        "(username, password) "
+        "VALUES (\"{}\", \"{}\")")
+
+        add_formation = ("INSERT INTO formations"
+        "(name, desc)")
+
+        if type == 'user':
+            add_user = add_user.format(data['username'], data['password'])
+            self.db_cursor.execute(add_user)
+        elif type == 'formation':
+            self.db_cursor.execute(add_formation, (data['name'], data['description']))
+
+        self.conn.commit()
+
 
     def delete_row(self) -> None:
+        delete_user = ("")
         pass
 
-    def get_row(self, row) -> None:
+    def get_row(self, type, *row) -> None:
+        select_user = ("SELECT username FROM users")
+        if type == 'user':
+            self.db_cursor.execute(select_user)
         pass
 
 db = DatabaseConnection()
 db.connect()
 
 db.init_database()
-db.insert_row('user', {'username': 'chat', 'password': 'chat'})
+user = {'username': 'chat', 'password': 'chat'}
+db.insert_row('user', **user)
 
 
