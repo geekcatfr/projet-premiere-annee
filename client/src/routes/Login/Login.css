@@ -9,9 +9,14 @@ form {
   align-items: center;
 }
 
-input {
+.form-content * {
+  margin-bottom: 10px;
+}
+
+input[type="email"], input[type="password"] {
   width: fit-content;
   border: 1px solid black;
+  height: 1.5rem;
   border-radius: 22px;
 }
 
@@ -36,5 +41,7 @@ input {
 input[type="submit"] {
   padding: 16px;
   background-color: var(--main-blue);
+  border-radius: 22px;
+  border: 0;
   color: white;
 }
