@@ -7,7 +7,7 @@ export default function Login() {
   return (
     <div className="container login-container">
       <div className="login">
-        <img src={Logo} alt="Logo NDLP" />
+        <img className="login-logo" src={Logo} alt="Logo NDLP" />
         <h1>Connexion</h1>
         <form>
           <div className="form-content">
