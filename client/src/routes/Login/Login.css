@@ -29,6 +29,10 @@ input {
   align-items: center;
 }
 
+.login-logo {
+  width: 32px;
+}
+
 input[type="submit"] {
   padding: 16px;
   background-color: var(--main-blue);
