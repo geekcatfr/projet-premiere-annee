@@ -4,8 +4,12 @@ div.container {
 
 .first-page-content {
   display: flex;
-  flex-flow: column;
-  justify-content: center;
+  justify-content: space-around;
+  align-items: center; 
+}
+
+.container {
+  display:flex;
   align-items: center;
 }
 
@@ -13,7 +17,8 @@ div.container {
   font-family: Montserrat;
   font-style: normal;
   font-weight: bold;
-  font-size: 96px;
+  font-size: 60px;
+  width: 40%;
 }
 
 .button {
@@ -32,7 +37,7 @@ div.container {
   margin-right: 24px;
 }
 
-@media screen and (min-width: 400px) {
+@media screen and (max-width: 400px) {
   .first-page-title {
     font-size: 42px;
   }
