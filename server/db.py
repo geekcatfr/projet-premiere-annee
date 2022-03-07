@@ -43,12 +43,13 @@ def init_rows(db_conn, db_name):
     tables['users'] = ("CREATE TABLE `users` ( "
         "`user_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
         "`username` varchar(32) NOT NULL, "
-        "`password` varchar(256) NOT NULL "
+        "`password` varchar(512) NOT NULL "
         ") ENGINE=InnoDB")
 
     tables['formations'] = ("CREATE TABLE `formations` ( "
     "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
-    "`name` varchar(100) NOT NULL"
+    "`name` TINYTEXT NOT NULL, "
+    "`description` TEXT"
     ") ENGINE=InnoDB")
 
 
@@ -89,51 +90,61 @@ class DatabaseConnection():
   
 
     def init_database(self):
-        self.db_cursor = self.conn.cursor()
+        db_cursor = self.conn.cursor()
         try:
-            self.db_cursor.execute(f"USE {self.name}")
-            self.db_cursor = self.conn.cursor()
+            db_cursor.execute(f"USE {self.name}")
+            db_cursor = self.conn.cursor()
         except mysql.connector.Error as error:
             if error.errno == errorcode.ER_BAD_DB_ERROR:
                 writeInLog(error)
                 print(f"[NOTE] Database {self.name} doesn't exist. Creating it...")
-                create_database(self.name, self.db_cursor)
+                create_database(self.name, db_cursor)
                 init_rows(self.conn, self.name)
                 self.conn.database = self.name
 
-    def insert_row(self, type, **data):
+        db_cursor.close()
 
+    def insert_row(self, type, **data):
+        db_cursor = self.conn.cursor()
         add_user = ("INSERT INTO users "
         "(username, password) "
         "VALUES (\"{}\", \"{}\")")
 
-        add_formation = ("INSERT INTO formations"
-        "(name, desc)")
+        add_formation = ("INSERT INTO formations "
+        "(name, description) "
+        "VALUES (\"{}\", \"{}\") ")
 
         if type == 'user':
             add_user = add_user.format(data['username'], data['password'])
-            self.db_cursor.execute(add_user)
+            db_cursor.execute(add_user)
         elif type == 'formation':
-            self.db_cursor.execute(add_formation, (data['name'], data['description']))
+            print(add_formation.format(data['name'], data['description']))
+            db_cursor.execute(add_formation.format(data['name'], data['description']))
 
         self.conn.commit()
+        db_cursor.close()
 
 
     def delete_row(self) -> None:
         delete_user = ("")
         pass
 
-    def get_row(self, type, *row) -> None:
-        select_user = ("SELECT username FROM users")
+    def get_user(self, type, username) -> None:
+        db_cursor = self.conn.cursor()
+        select_user = (f"SELECT username, password FROM users WHERE username = \"chat\"")
         if type == 'user':
-            self.db_cursor.execute(select_user)
-        pass
+            db_cursor.execute(f"USE {self.name}")
+            db_cursor.execute(select_user)
+            for user, password in db_cursor:
+                if username == user:
+                    return True
+        db_cursor.close()
 
-db = DatabaseConnection()
-db.connect()
 
-db.init_database()
-user = {'username': 'chat', 'password': 'chat'}
-db.insert_row('user', **user)
+
+# user = {'username': 'chat', 'password': 'chat'}
+# formation = {'name': 'Economie', 'description': "Voici une formation d'éco"}
+# db.insert_row('user', **user)
+# db.insert_row('formation', **formation)
 
 
