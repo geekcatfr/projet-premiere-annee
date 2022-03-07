@@ -1,10 +1,14 @@
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 import json
 
-from db import connect_database
+from db import DatabaseConnection
 
 app = FastAPI()
+db = DatabaseConnection()
+
+db.connect()
+db.init_database()
 
 @app.get("/")
 def read_root():
@@ -20,6 +24,7 @@ def list_formations():
 def formation_content(formation_id: int):
     return {"id": formation_id}
 
-@app.get('/users/{username}')
-def get_user(username: str):
-    pass
+@app.get('/users/login/')
+def login_user(username: str, password: str):
+    db.get_user('user', username)
+    return {"username": username}
