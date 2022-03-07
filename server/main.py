@@ -19,3 +19,7 @@ def list_formations():
 @app.get("/formations/{formation_id}")
 def formation_content(formation_id: int):
     return {"id": formation_id}
+
+@app.get('/users/{username}')
+def get_user(username: str):
+    pass
