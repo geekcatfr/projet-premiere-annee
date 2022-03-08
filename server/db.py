@@ -129,15 +129,17 @@ class DatabaseConnection():
         delete_user = ("")
         pass
 
-    def get_user(self, type, username) -> None:
+    def get_user(self, type, username, password) -> None:
         db_cursor = self.conn.cursor()
-        select_user = (f"SELECT username, password FROM users WHERE username = \"chat\"")
+        select_user = (f"SELECT username, password FROM users WHERE username = \"{username}\"")
         if type == 'user':
             db_cursor.execute(f"USE {self.name}")
             db_cursor.execute(select_user)
-            for user, password in db_cursor:
-                if username == user:
-                    return True
+            for user, db_pass in db_cursor:
+                if username == user and db_pass == password:
+                    return username, password
+                else:
+                    return None
         db_cursor.close()
 
 
