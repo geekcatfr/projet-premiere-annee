@@ -15,7 +15,7 @@ export default function Login() {
             <input type="text" name="username" id="username" required />
             <label htmlFor="password">Mot de passe :</label>
             <input type="password" name="password" id="password" />
-            <input type="submit" value="Connexion" onClick={sendData} />
+            <input type="submit" value="Connexion" />
           </div>
         </form>
       </div>
