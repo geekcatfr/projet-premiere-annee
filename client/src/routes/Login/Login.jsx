@@ -8,13 +8,18 @@ export default function Login() {
   const [password, setPassword] = useState(null);
 
   const sendFormData = async () => {
+    let headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
     let req = await fetch("/api/users/login", {
       method: "POST",
       mode: "cors",
+      headers: headers,
       body: JSON.stringify({ username: user, password: password }),
-    });
-    const content = await req.json();
-    console.log(req);
+    })
+      .then((res) => res.json())
+      .then(console.log);
   };
 
   return (
