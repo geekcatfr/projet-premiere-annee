@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, EmailStr
 import json
 
 from db import DatabaseConnection
@@ -10,7 +11,7 @@ app = FastAPI()
 
 origins = [
     "localhost:3000",
-    "localhost:8000",
+    "127.0.0.1:3000",
 ]
 
 app.add_middleware(
@@ -20,6 +21,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+class User(BaseModel):
+    username: str
+    password: str
 
 db.connect()
 db.init_database()
@@ -42,8 +47,10 @@ def add_formation(formation_title: str, formation_name: str):
     db.insert_row('formation', **formation)
     return {True}
 
-@app.get('/users/login/')
-def login_user(username: str, password: str):
-    (user, passw) = db.get_user('user', username, password)
-    if username == user and passw == password:
-        return {"username": user}
+@app.post('/users/login/')
+def login_user(user: User):
+    req = db.get_user(user.username, user.password)
+    if req is not None:
+        return req
+    else:
+        return {"error": "incorrect user login or password."}
