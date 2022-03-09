@@ -4,14 +4,18 @@ import Logo from "./../../assets/icons/logo-ndlp.png";
 import "./Login.css";
 
 export default function Login() {
-  const [user, setUsername] = useState(null)
-  const [password, setPassword] = useState(null)
+  const [user, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const sendFormData = async () => {
-    let req = await fetch('http://localhost:8000/users/login', {method: 'POST', mode: 'cors', body: JSON.stringify({"username": user, "password": password})})
+    let req = await fetch("/api/users/login", {
+      method: "POST",
+      mode: "cors",
+      body: JSON.stringify({ username: user, password: password }),
+    });
     const content = await req.json();
-    console.log(req)
-  }
+    console.log(req);
+  };
 
   return (
     <div className="container login-container">
@@ -21,10 +25,24 @@ export default function Login() {
         <form>
           <div className="form-content">
             <label htmlFor="username">Nom d'utilisateur :</label>
-            <input type="text" name="username" id="username" onChange={(e) => setUsername(e.target.value)} required />
+            <input
+              type="text"
+              name="username"
+              id="username"
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
             <label htmlFor="password">Mot de passe :</label>
-            <input type="password" name="password" onChange={(e) => setPassword(e.target.value)} id="password" required/>
-            <button type="button" onClick={sendFormData}>Connexion</button>
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              id="password"
+              required
+            />
+            <button type="button" onClick={sendFormData}>
+              Connexion
+            </button>
           </div>
         </form>
       </div>
