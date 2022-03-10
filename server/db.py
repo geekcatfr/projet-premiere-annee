@@ -1,3 +1,4 @@
+import secrets
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -50,6 +51,12 @@ def init_rows(db_conn, db_name):
     "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
     "`name` TINYTEXT NOT NULL, "
     "`description` TEXT"
+    ") ENGINE=InnoDB")
+
+    tables['tokens'] = ("CREATE TABLE `tokens` ( "
+    "`token_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+    "`token` TINYTEXT NOT NULL, "
+    "`validity_date` DATETIME NOT NULL"
     ") ENGINE=InnoDB")
 
 
@@ -143,11 +150,25 @@ class DatabaseConnection():
                 return None
         db_cursor.close()
 
+    def get_token(self):
+        validity_time = 60 # time in minutes
+
+        current_time = time.strftime("%y-%m-%d %H:%M:%S", time.localtime())
+        token = secrets.token_hex(20)
+        insert_token = ("INSERT INTO `tokens` "
+        "(token, validity_date) "
+        f"VALUES (\"{token}\", "
+        f"'{current_time}')")
+        print(insert_token)
+
+        db_cursor = self.conn.cursor()
+        db_cursor.execute(f"USE {self.name}")
+        db_cursor.execute(insert_token)
+        return {"token": token}
+
 
 
 # user = {'username': 'chat', 'password': 'chat'}
 # formation = {'name': 'Economie', 'description': "Voici une formation d'éco"}
 # db.insert_row('user', **user)
 # db.insert_row('formation', **formation)
-
-

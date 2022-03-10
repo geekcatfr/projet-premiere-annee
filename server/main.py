@@ -50,7 +50,8 @@ def add_formation(formation_title: str, formation_name: str):
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.get_user(user.username, user.password)
+    token = db.get_token()
     if req is not None:
-        return req
+        return token
     else:
         return {"error": "incorrect user login or password."}
