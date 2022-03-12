@@ -55,7 +55,8 @@ def init_rows(db_conn, db_name):
 
     tables['tokens'] = ("CREATE TABLE `tokens` ( "
     "`token_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
-    "`token` TINYTEXT NOT NULL, "
+    "`token` varchar(20) NOT NULL, "
+    "`user` varchar(32) NOT NULL, "
     "`validity_date` DATETIME NOT NULL"
     ") ENGINE=InnoDB")
 
