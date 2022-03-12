@@ -10,8 +10,10 @@ db = DatabaseConnection()
 app = FastAPI()
 
 origins = [
-    "localhost:3000",
-    "127.0.0.1:3000",
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
 ]
 
 app.add_middleware(
@@ -35,7 +37,7 @@ def read_root():
 
 @app.get("/formations")
 def list_formations():
-    return {"nom": ['Economie', 'Maths'], "desc": "ceci est une formation d\'eco"}
+    return {"name": ['Economie', 'Maths'], "description": ["ceci est une formation d'eco", "ceci est une formation de maths"]}
 
 @app.get("/formations/{formation_id}")
 def formation_content(formation_id: int):
