@@ -6,7 +6,7 @@ export default function Formations() {
   const [formations, setFormations] = useState([]);
 
   useEffect(() => {
-    fetch("/api/formations")
+    fetch("http://localhost:8000/formations")
       .then((res) => res.json())
       .then(
         (result) => {
