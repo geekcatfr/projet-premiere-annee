@@ -21,7 +21,7 @@ export default function Formations() {
       );
   }, []);
   if (error) {
-    console.log("Impossible to load the content of the API : " + error);
+    console.log("Impossible to load the content of the API : ", error);
     return (
       <div className="container">
         <p>Erreur en essayant de charger le contenu de la page...</p>

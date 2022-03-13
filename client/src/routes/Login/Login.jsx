@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState(null);
   const [token, setToken] = useState(null);
   const [isTokenSet, setisTokenSet] = useState(false);
+  const [error, setError] = useState(null);
 
   const sendFormData = async () => {
     let headers = new Headers({
@@ -21,14 +22,20 @@ export default function Login() {
       body: JSON.stringify({ username: user, password: password }),
     })
       .then((res) => res.json())
-      .then((token) => {
-        localStorage.setItem("token", token.token);
-        console.log(localStorage.getItem("token"));
-        setisTokenSet(true);
-      });
+      .then(
+        (result) => {
+          if (!(result.token == undefined)) {
+            localStorage.setItem("token", result.token);
+            console.log(localStorage.getItem("token"));
+            setisTokenSet(true);
+          }
+          console.log(result.token);
+        },
+        (error) => {
+          setError(true);
+        }
+      );
   };
-
-  const checkToken = () => {};
 
   if (!isTokenSet) {
     return (
@@ -54,7 +61,7 @@ export default function Login() {
                 id="password"
                 required
               />
-              <button type="button" onClick={sendFormData}>
+              <button onClick={sendFormData} type="button">
                 Connexion
               </button>
             </div>
