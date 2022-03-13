@@ -10,10 +10,7 @@ db = DatabaseConnection()
 app = FastAPI()
 
 origins = [
-    "http://localhost:3000",
-    "http://localhost:8000",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:8000",
+    "http://localhost:3000"
 ]
 
 app.add_middleware(
@@ -24,24 +21,30 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class User(BaseModel):
     username: str
     password: str
 
+
 db.connect()
 db.init_database()
+
 
 @app.get("/")
 def read_root():
     return {"Hello", "world"}
 
+
 @app.get("/formations")
 def list_formations():
     return {"name": ['Economie', 'Maths'], "description": ["ceci est une formation d'eco", "ceci est une formation de maths"]}
 
+
 @app.get("/formations/{formation_id}")
 def formation_content(formation_id: int):
     return {"id": formation_id}
+
 
 @app.get("/formations/add")
 def add_formation(formation_title: str, formation_name: str):
@@ -49,9 +52,10 @@ def add_formation(formation_title: str, formation_name: str):
     db.insert_row('formation', **formation)
     return {True}
 
+
 @app.post('/users/login/')
 def login_user(user: User):
-    req = db.get_user(user.username, user.password)
+    req = db.check_user(user.username, user.password)
     token = db.get_token()
     if req is not None:
         return token
