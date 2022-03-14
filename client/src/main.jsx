@@ -21,7 +21,7 @@ ReactDOM.render(
           <Route path="/formations" element={<Formations />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<WelcomeAdmin/>} />
+          <Route path="/admin" element={<WelcomeAdmin />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

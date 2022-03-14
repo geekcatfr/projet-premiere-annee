@@ -1,30 +1,29 @@
 import React, { useEffect, useState } from "react";
 
-import Logo from "./../../assets/icons/logo-ndlp.png";
+import Logo from "../../assets/icons/logo-ndlp.png";
 import "./Login.css";
 
 export default function Login() {
   const [user, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [token, setToken] = useState(null);
   const [isTokenSet, setisTokenSet] = useState(false);
   const [error, setError] = useState(null);
 
   const sendFormData = async () => {
-    let headers = new Headers({
+    const headers = new Headers({
       "Content-Type": "application/json",
     });
 
-    let req = await fetch("http://127.0.0.1:8000/users/login", {
+    const req = await fetch("http://127.0.0.1:8000/users/login", {
       method: "POST",
       mode: "cors",
-      headers: headers,
-      body: JSON.stringify({ username: user, password: password }),
+      headers,
+      body: JSON.stringify({ username: user, password }),
     })
       .then((res) => res.json())
       .then(
         (result) => {
-          if (!(result.token == undefined)) {
+          if (!(result.token === undefined)) {
             localStorage.setItem("token", result.token);
             console.log(localStorage.getItem("token"));
             setisTokenSet(true);
@@ -46,7 +45,7 @@ export default function Login() {
   };
 
   useEffect(() => {
-    checkToken;
+    checkToken();
   });
 
   if (!isTokenSet) {
@@ -81,8 +80,7 @@ export default function Login() {
         </div>
       </div>
     );
-  } else {
-    window.location = "/admin";
-    return null;
   }
+  window.location = "/admin";
+  return null;
 }

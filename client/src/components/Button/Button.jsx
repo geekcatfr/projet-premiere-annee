@@ -1,15 +1,13 @@
-import { Link } from 'react-router-dom'
+import { Link } from "react-router-dom";
 
-import './Button.css'
+import "./Button.css";
 
 function Button() {
-    return ( 
-    <div >
-        <a className='button'> 
-        Formations
-        </a>
+  return (
+    <div>
+      <a className="button">Formations</a>
     </div>
-    )
+  );
 }
 
-export default Button
+export default Button;
