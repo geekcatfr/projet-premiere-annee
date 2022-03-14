@@ -30,19 +30,24 @@ export default function Formations() {
   } else {
     return (
       <div>
-        <FormationUnit name={formations.name} desc={formations.description} />
+        <FormationUnit formations={formations} />
       </div>
     );
   }
 }
 
 function FormationUnit(props) {
-  const formationName = props.name;
-  const formationDesc = props.description;
+  const formationElement = props.formations;
+  console.log(formationElement)
+  const nameElement = formationElement.map((formation) => {
+    <li>
+      <h2>{formation.title}</h2>
+      <p>{formation.description}</p>
+    </li>
+  })
   return (
-    <div className="formation-block">
-      <h2>{formationName}</h2>
-      <p>{formationDesc}</p>
-    </div>
+    <>
+      {nameElement}
+    </>
   );
 }
