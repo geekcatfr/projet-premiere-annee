@@ -161,11 +161,26 @@ class DatabaseConnection():
 
         for id in db_cursor:
             return {"id": id, "username": username}
+        db_cursor.close()
 
-        pass
+    def get_formations(self):
+        db_cursor = self.conn.cursor()
+        get_formations_request = (f"SELECT formation_id, name, description FROM formations")
+        formations_names = []
+        formations_description = []
+        
+        db_cursor.execute(get_formations_request)
+
+        for id, name, desc in db_cursor:
+            formations_names.append(name)
+            formations_description.append(desc)
+
+        return id, formations_names, formations_description
+
 
     def get_token(self, user):
-        user_id = self.get_user_infos(user)
+        user_infos = self.get_user_infos(user)
+        user_id = user_infos["id"]
 
         validity_time = 60 # time in minutes
         current_time = time.strftime("%y-%m-%d %H:%M:%S", time.localtime())
@@ -175,8 +190,6 @@ class DatabaseConnection():
         "(token, validity_date, user) "
         f"VALUES ('{token}', "
         f"'{current_time}', {user_id})")
-
-
         db_cursor = self.conn.cursor()
         db_cursor.execute(f"USE {self.name}")
         db_cursor.execute(insert_token)
