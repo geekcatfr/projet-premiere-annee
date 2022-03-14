@@ -38,8 +38,8 @@ def read_root():
 
 @app.get("/formations")
 def list_formations():
-    formation_name, formation_desc = db.get_formations()
-    return {"title": formation_name, "description": formation_desc}
+    formation_name = db.get_formations()
+    return {"formations": formation_name}
 
 
 @app.get("/formations/{formation_id}")
