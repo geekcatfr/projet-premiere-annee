@@ -10,6 +10,7 @@ import About from "./routes/About/About";
 import NotFound from "./routes/NotFound/NotFound";
 
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
           <Route path="/formations" element={<Formations />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={<WelcomeAdmin/>} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
