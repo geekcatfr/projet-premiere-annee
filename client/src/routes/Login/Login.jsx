@@ -37,6 +37,18 @@ export default function Login() {
       );
   };
 
+  const checkToken = () => {
+    if (localStorage.getItem("token") == null) {
+      setisTokenSet(false);
+    } else {
+      setisTokenSet(true);
+    }
+  };
+
+  useEffect(() => {
+    checkToken;
+  });
+
   if (!isTokenSet) {
     return (
       <div className="container login-container">
@@ -71,5 +83,6 @@ export default function Login() {
     );
   } else {
     window.location = "/admin";
+    return null;
   }
 }
