@@ -86,6 +86,7 @@ class DatabaseConnection():
     def connect(self):
         try:
             self.conn = mysql.connector.MySQLConnection(**self.db_creds)
+            self.conn.database = self.name
             return True
         except mysql.connector.Error as error:
             writeInLog(error)
@@ -96,9 +97,16 @@ class DatabaseConnection():
             else:
                 print(error)
             return False
+    
+    def disconnect(self):
+        try:
+            self.conn.disconnect()
+        except mysql.connector.Error as error:
+            writeInLog(error)
   
 
     def init_database(self):
+        self.connect()
         db_cursor = self.conn.cursor()
         try:
             db_cursor.execute(f"USE {self.name}")
@@ -110,10 +118,11 @@ class DatabaseConnection():
                 create_database(self.name, db_cursor)
                 init_rows(self.conn, self.name)
                 self.conn.database = self.name
-
+        self.disconnect()
         db_cursor.close()
 
     def insert_row(self, type, **data):
+        self.connect()
         db_cursor = self.conn.cursor()
         add_user = ("INSERT INTO users "
         "(username, password) "
@@ -132,13 +141,17 @@ class DatabaseConnection():
 
         self.conn.commit()
         db_cursor.close()
+        self.disconnect()
 
 
     def delete_row(self) -> None:
+        self.connect()
         delete_user = ("")
+        self.disconnect()
         pass
 
-    def check_user(self, username, password) -> None:
+    def check_user(self, username, password):
+        self.connect()
         db_cursor = self.conn.cursor(buffered=True)
         select_user = (f"SELECT username, password FROM users WHERE username = \"{username}\"")
 
@@ -152,8 +165,10 @@ class DatabaseConnection():
             else:
                 return None
         db_cursor.close()
+        self.disconnect()
 
     def get_user_infos(self, username):
+        self.connect()
         db_cursor = self.conn.cursor()
         get_id_request = (f"SELECT user_id FROM users WHERE username = \"{username}\"")
 
@@ -162,23 +177,24 @@ class DatabaseConnection():
         for id in db_cursor:
             return {"id": id, "username": username}
         db_cursor.close()
+        self.disconnect()
 
     def get_formations(self):
+        self.connect()
         db_cursor = self.conn.cursor()
         get_formations_request = (f"SELECT formation_id, name, description FROM formations")
-        formations_names = []
-        formations_description = []
+        formations_list = []
         
         db_cursor.execute(get_formations_request)
 
         for id, name, desc in db_cursor:
-            formations_names.append(name)
-            formations_description.append(desc)
-
-        return id, formations_names, formations_description
+            formations_list.append({"id": id, "title": name, "description": desc})
+        self.disconnect()
+        return formations_list
 
 
     def get_token(self, user):
+        self.connect()
         user_infos = self.get_user_infos(user)
         user_id = user_infos["id"]
 
@@ -193,4 +209,6 @@ class DatabaseConnection():
         db_cursor = self.conn.cursor()
         db_cursor.execute(f"USE {self.name}")
         db_cursor.execute(insert_token)
+        self.disconnect()
+
         return {"token": token}
