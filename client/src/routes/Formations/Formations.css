@@ -1,0 +1,19 @@
+.formation-grid {
+  list-style-type: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 48px;
+  grid-auto-rows: 1fr;
+}
+
+.formation-description {
+  background-color: white;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-bottom: 6px;
+}
+
+.formation-box {
+  filter: drop-shadow(0px 4px 4px rgba(84, 63, 63, 0.25));
+  max-width: 283px;
+}
