@@ -1,22 +1,27 @@
 import React from 'react'
 import './WelcomeAdmin.css'
 
-function WelcomeAdmin() {
+export default function WelcomeAdmin() {
     return (
-        <div>
+        <div className='container'>
+            <div className='welcome'>
+            <p><b>Bienvenue !</b></p>
+            <p>Que souhaitez vous faire ?</p>
+            <div className='button-grid'>
             <Button buttonText='Formations' />
+            <Button buttonText='Pages' />
+            <Button buttonText='Statistiques' />
+            <Button buttonText='Paramètres du site' />
+            <div className='solid'>
+                </div>
+            </div>
         </div>
+    </div>
     )
 }
 
-class Button extends React.Component {
-    constructor() {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className='button'>{this.buttonText}</div>
-        )
-    }
+function Button(props) {
+    return (
+        <div className='admin-button'>{props.buttonText}</div>
+     )
 }
