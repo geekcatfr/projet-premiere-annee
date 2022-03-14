@@ -38,7 +38,8 @@ def read_root():
 
 @app.get("/formations")
 def list_formations():
-    return {"name": ['Economie', 'Maths'], "description": ["ceci est une formation d'eco", "ceci est une formation de maths"]}
+    formation_name, formation_desc = db.get_formations()
+    return {"title": formation_name, "description": formation_desc}
 
 
 @app.get("/formations/{formation_id}")
@@ -56,8 +57,8 @@ def add_formation(formation_title: str, formation_name: str):
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.check_user(user.username, user.password)
-    token = db.get_token()
+    #token = db.get_token()
     if req is not None:
-        return token
+        return {"token": "aaa"}
     else:
         return {"error": "incorrect user login or password."}
