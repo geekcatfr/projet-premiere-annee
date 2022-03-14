@@ -4,9 +4,9 @@
         "es2021": true
     },
     "extends": [
-        "eslint:recommended",
-        "react-hooks",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "airbnb",
+        "plugin:prettier/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
@@ -20,7 +20,6 @@
         "prettier"
     ],
     "rules": {
-        "react-hooks/rules-of-hooks": "error", // Checks rules of Hooks
-        "react-hooks/exhaustive-deps": "warn"
+      "prettier/prettier": "error"
     }
 }
