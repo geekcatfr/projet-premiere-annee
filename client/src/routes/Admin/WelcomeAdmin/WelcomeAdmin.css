@@ -36,7 +36,10 @@
   .solid {
     background-color:#0d2b78;
     width:104px;
-	  height:10px;
-    align-items: flex-start;
-    justify-content: flex-start
+	  height:100vh;
+    align-items: flex-absolute;
+    justify-content: flex-start;
+    position: fixed;
+    top:0px;
+    left:0px;
   }
