@@ -1,3 +1,4 @@
+import secrets
 import mysql.connector
 from mysql.connector import errorcode
 
@@ -50,6 +51,14 @@ def init_rows(db_conn, db_name):
     "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
     "`name` TINYTEXT NOT NULL, "
     "`description` TEXT"
+    ") ENGINE=InnoDB")
+
+    tables['tokens'] = ("CREATE TABLE `tokens` ( "
+    "`token_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+    "`token` varchar(20) NOT NULL, "
+    "`validity_date` DATETIME NOT NULL, "
+    "`user` int, "
+    "FOREIGN KEY (`user`) REFERENCES users(user_id) "
     ") ENGINE=InnoDB")
 
 
@@ -129,22 +138,46 @@ class DatabaseConnection():
         delete_user = ("")
         pass
 
-    def get_user(self, type, username) -> None:
-        db_cursor = self.conn.cursor()
-        select_user = (f"SELECT username, password FROM users WHERE username = \"chat\"")
-        if type == 'user':
-            db_cursor.execute(f"USE {self.name}")
-            db_cursor.execute(select_user)
-            for user, password in db_cursor:
-                if username == user:
-                    return True
+    def check_user(self, username, password) -> None:
+        db_cursor = self.conn.cursor(buffered=True)
+        select_user = (f"SELECT username, password FROM users WHERE username = \"{username}\"")
+
+        db_cursor.execute(f"USE {self.name}")
+        db_cursor.execute(select_user)
+
+        for user, db_pass in db_cursor:
+            print(user, db_pass)
+            if username == user and db_pass == password:
+                return {"username": username, "password": password}
+            else:
+                return None
         db_cursor.close()
 
+    def get_user_infos(self, username):
+        db_cursor = self.conn.cursor()
+        get_id_request = (f"SELECT user_id FROM users WHERE username = \"{username}\"")
+
+        db_cursor.execute(get_id_request)
+
+        for id in db_cursor:
+            return {"id": id, "username": username}
+
+        pass
+
+    def get_token(self, user):
+        user_id = self.get_user_infos(user)
+
+        validity_time = 60 # time in minutes
+        current_time = time.strftime("%y-%m-%d %H:%M:%S", time.localtime())
+        token = secrets.token_hex(8)
+
+        insert_token = ("INSERT INTO `tokens` "
+        "(token, validity_date, user) "
+        f"VALUES ('{token}', "
+        f"'{current_time}', {user_id})")
 
 
-# user = {'username': 'chat', 'password': 'chat'}
-# formation = {'name': 'Economie', 'description': "Voici une formation d'éco"}
-# db.insert_row('user', **user)
-# db.insert_row('formation', **formation)
-
-
+        db_cursor = self.conn.cursor()
+        db_cursor.execute(f"USE {self.name}")
+        db_cursor.execute(insert_token)
+        return {"token": token}

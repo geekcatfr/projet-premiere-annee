@@ -1,24 +1,75 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Logo from "./../../assets/icons/logo-ndlp.png";
 import "./Login.css";
 
 export default function Login() {
-  return (
-    <div className="container login-container">
-      <div className="login">
-        <img className="login-logo" src={Logo} alt="Logo NDLP" />
-        <h1>Connexion</h1>
-        <form name="login">
-          <div className="form-content">
-            <label htmlFor="username">Nom d'utilisateur :</label>
-            <input type="text" name="username" id="username" required />
-            <label htmlFor="password">Mot de passe :</label>
-            <input type="password" name="password" id="password" />
-            <input type="submit" value="Connexion" />
-          </div>
-        </form>
+  const [user, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [token, setToken] = useState(null);
+  const [isTokenSet, setisTokenSet] = useState(false);
+  const [error, setError] = useState(null);
+
+  const sendFormData = async () => {
+    let headers = new Headers({
+      "Content-Type": "application/json",
+    });
+
+    let req = await fetch("http://127.0.0.1:8000/users/login", {
+      method: "POST",
+      mode: "cors",
+      headers: headers,
+      body: JSON.stringify({ username: user, password: password }),
+    })
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          if (!(result.token == undefined)) {
+            localStorage.setItem("token", result.token);
+            console.log(localStorage.getItem("token"));
+            setisTokenSet(true);
+          }
+          console.log(result.token);
+        },
+        (error) => {
+          setError(true);
+        }
+      );
+  };
+
+  if (!isTokenSet) {
+    return (
+      <div className="container login-container">
+        <div className="login">
+          <img className="login-logo" src={Logo} alt="Logo NDLP" />
+          <h1>Connexion</h1>
+          <form>
+            <div className="form-content">
+              <label htmlFor="username">Nom d'utilisateur :</label>
+              <input
+                type="text"
+                name="username"
+                id="username"
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+              <label htmlFor="password">Mot de passe :</label>
+              <input
+                type="password"
+                name="password"
+                onChange={(e) => setPassword(e.target.value)}
+                id="password"
+                required
+              />
+              <button onClick={sendFormData} type="button">
+                Connexion
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    window.location = "/admin";
+  }
 }
