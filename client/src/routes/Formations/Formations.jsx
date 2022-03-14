@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./Formations.css";
 
 export default function Formations() {
   const [error, setError] = useState(null);
@@ -10,9 +11,9 @@ export default function Formations() {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           setIsLoaded(true);
-          setFormations(result);
+          setFormations(result.formations);
+          console.log(result.formations);
         },
         (error) => {
           setIsLoaded(true);
@@ -20,34 +21,36 @@ export default function Formations() {
         }
       );
   }, []);
+
   if (error) {
-    console.log("Impossible to load the content of the API : ", error);
+    console.log("Impossible to load the content of the API : " + error);
     return (
       <div className="container">
-        <p>Erreur en essayant de charger le contenu de la page...</p>
+        <p>
+          Erreur en essayant de charger le contenu de la page... {error.message}
+        </p>
+      </div>
+    );
+  } else if (!isLoaded) {
+    return (
+      <div className="container">
+        <p>Chargement des formations...</p>
       </div>
     );
   } else {
     return (
-      <div>
-        <FormationUnit formations={formations} />
+      <div className="container">
+        <ul className="formation-grid">
+          {formations.map((formation) => (
+            <li key={formation.id} className="formation-box">
+              <div className="formation-description">
+                <h2>{formation.title}</h2>
+                <p>{formation.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
-}
-
-function FormationUnit(props) {
-  const formationElement = props.formations;
-  console.log(formationElement)
-  const nameElement = formationElement.map((formation) => {
-    <li>
-      <h2>{formation.title}</h2>
-      <p>{formation.description}</p>
-    </li>
-  })
-  return (
-    <>
-      {nameElement}
-    </>
-  );
 }
