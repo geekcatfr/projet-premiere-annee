@@ -50,7 +50,8 @@ def init_rows(db_conn, db_name):
     tables['formations'] = ("CREATE TABLE `formations` ( "
     "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
     "`name` TINYTEXT NOT NULL, "
-    "`description` TEXT"
+    "`description` TEXT, "
+    "`content` TEXT NOT NULL"
     ") ENGINE=InnoDB")
 
     tables['tokens'] = ("CREATE TABLE `tokens` ( "
@@ -129,14 +130,14 @@ class DatabaseConnection():
         "VALUES (\"{}\", \"{}\")")
 
         add_formation = ("INSERT INTO formations "
-        "(name, description) "
-        "VALUES (\"{}\", \"{}\") ")
+        "(name, description, content) "
+        "VALUES (\"{}\", \"{}\", \"{}\") ")
 
         if type == 'user':
             add_user = add_user.format(data['username'], data['password'])
             db_cursor.execute(add_user)
         elif type == 'formation':
-            print(add_formation.format(data['name'], data['description']))
+            print(add_formation.format(data['name'], data['description'], data['content']))
             db_cursor.execute(add_formation.format(data['name'], data['description']))
 
         self.conn.commit()

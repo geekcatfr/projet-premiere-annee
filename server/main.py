@@ -26,6 +26,11 @@ class User(BaseModel):
     username: str
     password: str
 
+class Formation(BaseModel):
+    name: str
+    description: str
+    content: str
+
 
 db.connect()
 db.init_database()
@@ -47,10 +52,9 @@ def formation_content(formation_id: int):
     return {"id": formation_id}
 
 
-@app.get("/formations/add")
-def add_formation(formation_title: str, formation_name: str):
-    formation = {'name': formation_title, 'description': formation_name}
-    db.insert_row('formation', **formation)
+@app.post("/formations/add")
+def add_formation(formation: Formation):
+    db.insert_row('formation', formation.name, formation.description, formation.content)
     return {True}
 
 
