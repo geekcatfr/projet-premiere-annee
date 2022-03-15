@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./NotFound.css";
 
 function NotFound() {
@@ -9,9 +10,11 @@ function NotFound() {
         <p className="access">
           La page que vous avez demandé n'est pas accessible
         </p>
-        <div className="center">
-          <p>Accueil</p>
-        </div>
+        <Link to="/">
+          <div className="center">
+            <p>Accueil</p>
+          </div>
+        </Link>
       </div>
     </div>
   );

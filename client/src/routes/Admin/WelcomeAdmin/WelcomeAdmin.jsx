@@ -23,7 +23,7 @@ export default function WelcomeAdmin() {
           <Link to="/admin/settings">
             <Button buttonText="Paramètres du site" />
           </Link>
-          <div className="solid"></div>
+          <div className="solid" />
         </div>
       </div>
     </div>
