@@ -13,7 +13,7 @@ export default function WelcomeAdmin() {
         <div className="button-grid">
           <Link to="/admin/formations">
             <Button buttonText="Formations" />
-          </Link>{" "}
+          </Link>
           <Link to="/admin/pages">
             <Button buttonText="Pages" />
           </Link>
@@ -23,7 +23,6 @@ export default function WelcomeAdmin() {
           <Link to="/admin/settings">
             <Button buttonText="Paramètres du site" />
           </Link>
-          <div className="solid" />
         </div>
       </div>
     </div>
