@@ -7,7 +7,7 @@ export default function Login() {
   const [user, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [isTokenSet, setisTokenSet] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(false);
 
   const sendFormData = async () => {
     const headers = new Headers({
@@ -18,7 +18,7 @@ export default function Login() {
       method: "POST",
       mode: "cors",
       headers,
-      body: JSON.stringify({ username: user, password }),
+      body: JSON.stringify({ username: user, password: password }),
     })
       .then((res) => res.json())
       .then(
@@ -27,6 +27,8 @@ export default function Login() {
             localStorage.setItem("token", result.token);
             console.log(localStorage.getItem("token"));
             setisTokenSet(true);
+          } else {
+            setError(true)
           }
           console.log(result.token);
         },
