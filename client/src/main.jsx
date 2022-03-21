@@ -4,6 +4,7 @@ import "./index.css";
 
 import App from "./App";
 import Navbar from "./components/Navbar/Navbar";
+import AdminNavbar from "./components/AdminNavbar/AdminNavbar";
 import Formations from "./routes/Formations/Formations";
 import Login from "./routes/Login/Login";
 import About from "./routes/About/About";
@@ -21,8 +22,10 @@ ReactDOM.render(
           <Route path="/formations" element={<Formations />} />
           <Route path="/about" element={<About />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<WelcomeAdmin />} />
           <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="/admin" element={<AdminNavbar />}>
+          <Route path="/admin" element={<WelcomeAdmin />} />
         </Route>
       </Routes>
     </BrowserRouter>
