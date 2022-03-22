@@ -54,14 +54,15 @@ def formation_content(formation_id: int):
 
 @app.post("/formations/add")
 def add_formation(formation: Formation):
-    db.insert_row('formation', formation.name, formation.description, formation.content)
+    db.insert_formation(formation)
+    print(formation.content)
     return {True}
 
 
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.check_user(user.username, user.password)
-    #token = db.get_token()
+    #token = db.get_token(user.username)
     if req is not None:
         return {"token": "aaa"}
     else:
