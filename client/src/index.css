@@ -5,9 +5,16 @@
   --main-blue: #0d2b78;
 }
 
-body {
+* {
   margin: 0;
   padding: 0;
+}
+
+#root {
+  height: calc(100vh);
+}
+
+body {
   font-family: sans-serif;
   background-color: #dddddd;
 }
