@@ -5,6 +5,10 @@ import "./Navbar.css";
 import logo from "./logo-ndlp.png";
 
 export default function Navbar() {
+  const [isConnected, setIsConnected] = useState(false);
+
+  const isConnected = () => {};
+
   return (
     <div>
       <nav>
@@ -16,7 +20,9 @@ export default function Navbar() {
           <div className="navbar-right">
             <Link to="/formations">Formations</Link>
             <Link to="/about">A propos</Link>
-            <Link to="/login"> Se connecter</Link>
+            <Link to="/login">
+              {isConnected ? "Se connecter" : "Se déconnecter"}
+            </Link>
           </div>
         </div>
       </nav>
