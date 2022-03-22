@@ -6,11 +6,12 @@
   grid-auto-rows: 1fr;
 }
 
-.formation-description {
+div.formation-description {
   background-color: white;
   padding-left: 6px;
   padding-right: 6px;
   padding-bottom: 6px;
+  transition: all .5s ease;
 }
 
 .formation-box {
@@ -28,4 +29,12 @@
   .formation-grid {
     grid-template-columns: repeat(1, 1fr);
   }
+}
+
+div.formation-description img {
+  height: auto;
+}
+
+div.formation-description:hover {
+  filter: drop-shadow(0px 4px 15px rgba(84, 63, 63, 0.25));
 }

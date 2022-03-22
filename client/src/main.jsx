@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import App from "./App";
 import Navbar from "./components/Navbar/Navbar";
 import AdminNavbar from "./components/AdminNavbar/AdminNavbar";
@@ -10,7 +11,6 @@ import Login from "./routes/Login/Login";
 import About from "./routes/About/About";
 import NotFound from "./routes/NotFound/NotFound";
 
-import { Routes, Route, BrowserRouter } from "react-router-dom";
 import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
 
 ReactDOM.render(
