@@ -19,7 +19,10 @@ def create_database(db_name, db_conn):
         return True
     except mysql.connector.Error as error:
         print("Erreur en créant la base de données : {db_name}")
-        return None
+        return False    
+
+def update_database() -> None:
+    pass
 
 def writeInLog(error):
     """Takes an error in str format as argument, writes in db.log the error with formatted time."""
@@ -97,6 +100,7 @@ class DatabaseConnection():
                 print("Database does not exist")
             else:
                 print(error)
+                print("Database is not running, please check")
             return False
     
     def disconnect(self):
@@ -104,6 +108,7 @@ class DatabaseConnection():
             self.conn.disconnect()
         except mysql.connector.Error as error:
             writeInLog(error)
+            print(error)
   
 
     def init_database(self):
@@ -129,21 +134,25 @@ class DatabaseConnection():
         "(username, password) "
         "VALUES (\"{}\", \"{}\")")
 
-        add_formation = ("INSERT INTO formations "
-        "(name, description, content) "
-        "VALUES (\"{}\", \"{}\", \"{}\") ")
-
         if type == 'user':
             add_user = add_user.format(data['username'], data['password'])
             db_cursor.execute(add_user)
-        elif type == 'formation':
-            print(add_formation.format(data['name'], data['description'], data['content']))
-            db_cursor.execute(add_formation.format(data['name'], data['description']))
 
         self.conn.commit()
         db_cursor.close()
         self.disconnect()
+        pass
 
+    def insert_formation(self, data):
+        self.connect()
+        db_cursor = self.conn.cursor()
+        add_formation = ("INSERT INTO formations "
+        "(name, description, content) "
+        f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\") ")
+        db_cursor.execute(add_formation)
+        self.conn.commit()
+        db_cursor.close()
+        self.disconnect()
 
     def delete_row(self) -> None:
         self.connect()
@@ -160,7 +169,6 @@ class DatabaseConnection():
         db_cursor.execute(select_user)
 
         for user, db_pass in db_cursor:
-            print(user, db_pass)
             if username == user and db_pass == password:
                 return {"username": username, "password": password}
             else:
