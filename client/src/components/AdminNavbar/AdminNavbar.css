@@ -1,0 +1,18 @@
+.NavBar{
+    color:white;
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Open Sans';
+}
+
+.Title{
+    font-weight: bolder;
+    padding: 0%;
+    font-size: 20px;
+}
+
+.NavText{
+    padding-bottom: 50%;
+    font-size: 15px;
+    
+}

@@ -1,11 +1,11 @@
 import React from "react";
+import "./AdminNavbar.css";
 
 export default function AdminNavbar(props) {
   return (
     <div className="solid">
       <ul>
-        <NavbarElement name="Formations" />
-        <NavbarElement name="Pages" />
+        <NavbarElement name="Navbar" />
       </ul>
     </div>
   );
@@ -13,13 +13,37 @@ export default function AdminNavbar(props) {
 
 function NavbarElement(props) {
   return (
-    <li>
-      <p>{props.name}</p>
+    <div className="NavBar">
       <ul>
-        <li>
-          <p>Ajouter une page</p>
-        </li>
+        <li className="Title">Formations</li>
+        <div className="NavText">
+          <ul>
+            <li>Ajouter</li>
+          </ul>
+        </div>
+
+        <li className="Title">Paramètres</li>
+        <div className="NavText">
+          <ul>
+            <li>Utilisateurs</li>
+            <li>Sauvegardes</li>
+          </ul>
+        </div>
+
+        <li className="Title">Pages</li>
+        <div className="NavText">
+          <ul>
+            <li>Ajouter une page</li>
+          </ul>
+        </div>
+
+        <li className="Title">Statistiques</li>
+        <div className="NavText">
+          <ul>
+            <li>Exporter</li>
+          </ul>
+        </div>
       </ul>
-    </li>
+    </div>
   );
 }
