@@ -16,19 +16,18 @@ import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Navbar />}>
-          <Route index element={<App />} />
-          <Route path="/formations" element={<Formations />}>
-            <Route path=":id" element={<Formations />} />
-          </Route>
-          <Route path="/about" element={<About />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={<AdminNavbar />}>
-            <Route path="/admin/*" element={<WelcomeAdmin />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
+        <Route index element={<App />} />
+        <Route path="/formations" element={<Formations />}>
+          <Route path=":id" element={<Formations />} />
         </Route>
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AdminNavbar />}>
+          <Route path="/admin/*" element={<AdminNavbar />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,

@@ -6,8 +6,8 @@ a {
 .navbar {
   position: relative;
   font-family: "Open Sans", sans-serif;
-  margin-top: 24px;
-  margin-bottom: 24px;
+  padding-top: 24px;
+  padding-bottom: 24px;
   width: 100%;
   display: flex;
   justify-content: space-around;
