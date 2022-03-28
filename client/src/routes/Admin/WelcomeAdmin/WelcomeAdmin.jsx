@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import AdminNavbar from "../../../components/AdminNavbar/AdminNavbar";
 import "./WelcomeAdmin.css";
 
 export default function WelcomeAdmin() {

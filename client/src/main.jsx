@@ -5,7 +5,7 @@ import "./index.css";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 import App from "./App";
 import Navbar from "./components/Navbar/Navbar";
-import AdminNavbar from "./components/AdminNavbar/AdminNavbar";
+import FormationPage from "./routes/Admin/FormationPage/FormationPage";
 import Formations from "./routes/Formations/Formations";
 import Login from "./routes/Login/Login";
 import About from "./routes/About/About";
@@ -24,9 +24,8 @@ ReactDOM.render(
         </Route>
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AdminNavbar />}>
-          <Route path="/admin/*" element={<AdminNavbar />} />
-        </Route>
+        <Route path="/admin" element={<WelcomeAdmin />} />
+        <Route path="/admin/formations" element={<FormationPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
