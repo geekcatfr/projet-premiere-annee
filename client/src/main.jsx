@@ -12,13 +12,15 @@ import About from "./routes/About/About";
 import NotFound from "./routes/NotFound/NotFound";
 
 import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
+import Home from "./routes/Home/Home";
+import "normalize.css";
 
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route index element={<App />} />
+        <Route index element={<Home />} />
         <Route path="/formations" element={<Formations />}>
           <Route path=":id" element={<Formations />} />
         </Route>
