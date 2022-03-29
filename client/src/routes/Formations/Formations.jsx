@@ -39,23 +39,33 @@ export default function Formations() {
     );
   }
   return (
-    <div className="container">
+    <div className="formation-wrapper">
+      <h1>Formations</h1>
       <ul className="formation-grid">
         {formations.map((formation) => (
           <li key={formation.id} className="formation-box">
             <Link to={formation.id}>
-              <div className="formation-description">
-                <img
-                  src="https://www.studyrama.com/modules/custom/stu_anfor/public/images/annuaire-diplomes.svg"
-                  alt="C'est un diplôme"
-                />
-                <h2>{formation.title}</h2>
-                <p>{formation.description}</p>
-              </div>
+              <FormationBox
+                title={formation.title}
+                description={formation.description}
+              />
             </Link>
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function FormationBox(props) {
+  return (
+    <div className="formation-description">
+      <img
+        src="https://www.studyrama.com/modules/custom/stu_anfor/public/images/annuaire-diplomes.svg"
+        alt="C'est un diplôme"
+      />
+      <h2>{props.title}</h2>
+      <p>{props.description}</p>
     </div>
   );
 }

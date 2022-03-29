@@ -11,12 +11,11 @@ div.formation-description {
   padding-left: 6px;
   padding-right: 6px;
   padding-bottom: 6px;
-  transition: all .5s ease;
+  transition: all 0.5s ease;
 }
 
 .formation-box {
   filter: drop-shadow(0px 4px 4px rgba(84, 63, 63, 0.25));
-  max-width: 283px;
 }
 
 @media screen and (max-width: 900px) {
