@@ -43,3 +43,9 @@
   top: 0px;
   left: 0px;
 }
+
+@media screen and (max-width: 800px) {
+  .button-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
