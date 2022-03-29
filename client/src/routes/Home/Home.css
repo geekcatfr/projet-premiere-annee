@@ -1,7 +1,9 @@
-div.container {
-  height: 100%;
+.home-wrapper {
+  height: 80vh;
   width: 100%;
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .first-page-content {
