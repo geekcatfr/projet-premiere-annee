@@ -1,0 +1,32 @@
+.formation-actions {
+  display: flex;
+  list-style: none;
+}
+
+input[type="checkbox"] {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+table {
+  padding: 10px;
+  background-color: white;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.formation-row {
+  border-top: 1px solid #000;
+}
+
+.formation-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+ul.formation-actions li {
+  margin-right: 12px;
+}
+
+ul.formation-actions li {
+}

@@ -1,6 +1,17 @@
 import { React, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "./FormationPage.css";
 
 export default function FormationPage() {
+  return (
+    <>
+      <h1>Formations</h1>
+      <FormationTable />
+    </>
+  );
+}
+
+function FormationTable(props) {
   const [formations, setFormations] = useState([]);
   const [error, setError] = useState(null);
 
@@ -11,27 +22,45 @@ export default function FormationPage() {
         (result) => {
           setFormations(result.formations);
         },
-        (error) => {
+        (err) => {
           setError(true);
         }
       );
-  });
+  }, []);
+  if (error) {
+    return <p>Impossible de charger le contenu de la page</p>;
+  }
   return (
-    <>
-      <h1>Formations</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" />
+          </th>
+          <th>Titre</th>
+        </tr>
+      </thead>
+      <tbody>
+        {formations.map((formation) => (
+          <tr className="formation-row" key={formation.id}>
+            <td className="checkbox">
+              <input type="checkbox" />
+            </td>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Nom</th>
+            <td>
+              <p className="formation-title">{formation.title}</p>
+              <ul className="formation-actions">
+                <li>
+                  <Link to="edit">Editer</Link>
+                </li>
+                <li>
+                  <Link to="delete">Supprimer</Link>
+                </li>
+              </ul>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          {formations.map((formation) => (
-            <tr value={formation.id}>{formation.name}</tr>
-          ))}
-        </tbody>
-      </table>
-    </>
+        ))}
+      </tbody>
+    </table>
   );
 }
