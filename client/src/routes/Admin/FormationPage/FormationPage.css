@@ -1,6 +1,7 @@
 .formation-actions {
   display: flex;
   list-style: none;
+  gap: 12px;
 }
 
 input[type="checkbox"] {
@@ -22,11 +23,4 @@ table {
 .formation-title {
   font-size: 24px;
   font-weight: bold;
-}
-
-ul.formation-actions li {
-  margin-right: 12px;
-}
-
-ul.formation-actions li {
 }
