@@ -1,11 +1,11 @@
+import sys
 from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
 import json
 
-from db import DatabaseConnection
-db = DatabaseConnection()
+from db import DatabaseConnection, writeInLog
 
 app = FastAPI()
 
@@ -26,14 +26,21 @@ class User(BaseModel):
     username: str
     password: str
 
+
 class Formation(BaseModel):
     name: str
     description: str
     content: str
 
 
+db = DatabaseConnection()
 db.connect()
 db.init_database()
+
+if (db.isConnected == False):
+    writeInLog(
+        "MySQL server is either not running or wrong credentials have been entered in the db_id.json file.")
+    sys.exit("Database connexion error.")
 
 
 @app.get("/")
@@ -49,7 +56,8 @@ def list_formations():
 
 @app.get("/formations/{formation_id}")
 def formation_content(formation_id: int):
-    return {"id": formation_id}
+
+    return db.get_formation(formation_id)
 
 
 @app.post("/formations/add")
@@ -57,6 +65,11 @@ def add_formation(formation: Formation):
     db.insert_formation(formation)
     print(formation.content)
     return {True}
+
+
+@app.post("/formations/delete")
+def delete_formation(formation: Formation):
+    return {"isDeleted": True, "formationName": formation.name}
 
 
 @app.post('/users/login/')
