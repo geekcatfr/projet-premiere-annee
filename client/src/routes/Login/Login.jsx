@@ -25,12 +25,10 @@ export default function Login() {
         (result) => {
           if (!(result.token === undefined)) {
             localStorage.setItem("token", result.token);
-            console.log(localStorage.getItem("token"));
             setisTokenSet(true);
           } else {
-            setError(true)
+            setError(true);
           }
-          console.log(result.token);
         },
         (error) => {
           setError(true);
@@ -58,7 +56,7 @@ export default function Login() {
           <h1>Connexion</h1>
           <form>
             <div className="form-content">
-              <label htmlFor="username">Nom d'utilisateur :</label>
+              <label htmlFor="username">Nom d&apos;utilisateur :</label>
               <input
                 type="text"
                 name="username"
