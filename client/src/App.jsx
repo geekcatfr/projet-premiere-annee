@@ -1,30 +1,33 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { Routes, Route } from "react-router-dom";
+import Navbar from "./components/Navbar/Navbar";
+import FormationPage from "./routes/Admin/FormationPage/FormationPage";
+import Formations from "./routes/Formations/Formations";
+import Login from "./routes/Login/Login";
+import About from "./routes/About/About";
+import NotFound from "./routes/NotFound/NotFound";
+
+import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
+import Home from "./routes/Home/Home";
 
 import "./App.css";
 
 export default function App() {
   return (
-    <div className="container">
-      <div className="first-page-content">
-        <p className="first-page-title">Centre de formation FC PRO NDLP</p>
-        <div className="about-buttons">
-          <Link to="/about">
-            <Button name="En savoir plus" />
-          </Link>
-          <Link to="/formations">
-            <Button name="Nos formations" />
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Button(props) {
-  return (
     <>
-      <div className="button">{props.name}</div>
+      <Navbar />
+      <Routes>
+        <Route index element={<Home />} />
+        <Route path="/formations" element={<Formations />}>
+          <Route path=":id" element={<Formations />} />
+        </Route>
+        <Route path="/about" element={<About />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<WelcomeAdmin />} />
+        <Route path="/admin/formations" element={<FormationPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 }
