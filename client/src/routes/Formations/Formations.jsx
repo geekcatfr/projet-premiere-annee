@@ -15,9 +15,9 @@ export default function Formations() {
           setIsLoaded(true);
           setFormations(result.formations);
         },
-        (error) => {
+        (err) => {
           setIsLoaded(true);
-          setError(error);
+          setError(err);
         }
       );
   }, []);
@@ -44,7 +44,7 @@ export default function Formations() {
       <ul className="formation-grid">
         {formations.map((formation) => (
           <li key={formation.id} className="formation-box">
-            <Link to={formation.id}>
+            <Link to={`${formation.id}`}>
               <FormationBox
                 title={formation.title}
                 description={formation.description}
