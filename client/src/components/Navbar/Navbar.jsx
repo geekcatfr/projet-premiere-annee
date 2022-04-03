@@ -1,5 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 
 import "./Navbar.css";
 import logo from "./logo-ndlp.png";
@@ -7,12 +7,15 @@ import logo from "./logo-ndlp.png";
 export default function Navbar() {
   const [isConnected, setIsConnected] = useState(false);
 
-  const checkConnection = () => {
+  useEffect(() => {
     if (localStorage.getItem("token") != null) {
       setIsConnected(true);
-    } else {
-      setIsConnected(false);
     }
+  }, []);
+
+  const deleteToken = () => {
+    localStorage.removeItem("token");
+    setIsConnected(false);
   };
 
   return (
@@ -25,9 +28,13 @@ export default function Navbar() {
         <div className="navbar-right">
           <Link to="/formations">Formations</Link>
           <Link to="/about">A propos</Link>
-          <Link to="/login">
-            {isConnected ? "Se connecter" : "Se déconnecter"}
-          </Link>
+          {isConnected ? (
+            <Link to="/" onClick={deleteToken}>
+              Se déconnecter
+            </Link>
+          ) : (
+            <Link to="/login">Se connecter</Link>
+          )}
         </div>
       </div>
       <Outlet />
