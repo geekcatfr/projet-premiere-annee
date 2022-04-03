@@ -12,6 +12,7 @@ import WelcomeAdmin from "./routes/Admin/WelcomeAdmin/WelcomeAdmin";
 import Home from "./routes/Home/Home";
 
 import "./App.css";
+import EditPage from "./routes/Admin/EditPage/EditPage";
 
 export default function App() {
   return (
@@ -25,7 +26,8 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<WelcomeAdmin />} />
-        <Route path="/admin/formations" element={<FormationPage />} />
+        <Route path="/admin/formations" element={<FormationPage />}></Route>
+        <Route path="/admin/formations/edit/:id" element={<EditPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
