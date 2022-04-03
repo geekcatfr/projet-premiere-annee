@@ -18,6 +18,11 @@ div.formation-description {
   filter: drop-shadow(0px 4px 4px rgba(84, 63, 63, 0.25));
 }
 
+.formation-wrapper {
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
 @media screen and (max-width: 900px) {
   .formation-grid {
     grid-template-columns: repeat(2, 1fr);
