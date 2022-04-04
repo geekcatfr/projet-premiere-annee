@@ -10,17 +10,30 @@ input[type="checkbox"] {
 }
 
 table {
-  padding: 10px;
-  background-color: white;
+  padding: 15px;
+  background-color: #C4C4C4;
   width: 100%;
   border-collapse: collapse;
+ 
 }
 
 .formation-row {
   border-top: 1px solid #000;
+  
 }
 
 .formation-title {
   font-size: 24px;
   font-weight: bold;
+}
+
+.solid {
+  background-color: #C4C4C4;
+  width: 130px;
+  height: 100vh;
+  align-items: flex-absolute;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0px;
+  left: 0px;
 }
