@@ -159,8 +159,8 @@ class DatabaseConnection():
         self.connect()
         db_cursor = self.conn.cursor()
         add_formation = ("INSERT INTO formations "
-                         "(name, description, content) "
-                         f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\") ")
+                         "(name, description, content, teacher) "
+                         f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\") ")
         db_cursor.execute(add_formation)
         self.conn.commit()
         db_cursor.close()
@@ -206,14 +206,14 @@ class DatabaseConnection():
         self.connect()
         db_cursor = self.conn.cursor()
         get_formations_request = (
-            f"SELECT formation_id, name, description FROM formations")
+            f"SELECT formation_id, name, description, teacher FROM formations")
         formations_list = []
 
         db_cursor.execute(get_formations_request)
 
-        for id, name, desc in db_cursor:
+        for id, name, desc, teacher in db_cursor:
             formations_list.append(
-                {"id": id, "title": name, "description": desc})
+                {"id": id, "title": name, "description": desc, "teacher": teacher})
         self.disconnect()
         return formations_list
 
