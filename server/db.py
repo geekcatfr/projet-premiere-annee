@@ -59,8 +59,16 @@ def init_rows(db_conn, db_name):
                             "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                             "`name` TINYTEXT NOT NULL, "
                             "`description` TEXT, "
-                            "`content` TEXT NOT NULL"
+                            "`content` TEXT NOT NULL, "
+                            "`teacher` TINYTEXT NOT NULL"
                             ") ENGINE=InnoDB")
+
+    tables['pages'] = ("CREATE TABLE `pages` ( "
+                       "`page_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+                       "`title` TINYTEXT NOT NULL, "
+                       "`description` TEXT, "
+                       "`content` TEXT NOT NULL"
+                       ") ENGINE=InnoDB")
 
     tables['tokens'] = ("CREATE TABLE `tokens` ( "
                         "`token_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
