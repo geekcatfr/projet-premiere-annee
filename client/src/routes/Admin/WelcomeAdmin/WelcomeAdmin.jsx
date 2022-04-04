@@ -6,6 +6,7 @@ import "./WelcomeAdmin.css";
 export default function WelcomeAdmin() {
   return (
     <div className="container">
+      <AdminNavbar />
       <div className="welcome">
         <p>
           <b>Bienvenue !</b>

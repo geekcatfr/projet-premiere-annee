@@ -13,36 +13,44 @@ export default function AdminNavbar(props) {
 
 function NavbarElement(props) {
   return (
-    <div className="NavBar">
+    <div className="NavBar ">
+      <div className="NavText">
       <ul>
-        <li className="Title">Formations</li>
-        <div className="NavText">
-          <ul>
-            <li>Ajouter</li>
-          </ul>
-        </div>
+        <li className="Title">
+          Formations
+            <ul>
+              <li>Ajouter</li>
+            </ul>
+          </div>
+        </li>
 
-        <li className="Title">Paramètres</li>
-        <div className="NavText">
-          <ul>
-            <li>Utilisateurs</li>
-            <li>Sauvegardes</li>
-          </ul>
-        </div>
+        <li className="Title">
+          Paramètres
+          <div className="NavText">
+            <ul>
+              <li>Utilisateurs</li>
+              <li>Sauvegardes</li>
+            </ul>
+          </div>
+        </li>
 
-        <li className="Title">Pages</li>
-        <div className="NavText">
-          <ul>
-            <li>Ajouter une page</li>
-          </ul>
-        </div>
+        <li className="Title">
+          Pages
+          <div className="NavText">
+            <ul>
+              <li>Ajouter une page</li>
+            </ul>
+          </div>
+        </li>
 
-        <li className="Title">Statistiques</li>
-        <div className="NavText">
-          <ul>
-            <li>Exporter</li>
-          </ul>
-        </div>
+        <li className="Title">
+          Statistiques
+          <div className="NavText">
+            <ul>
+              <li>Exporter</li>
+            </ul>
+          </div>
+        </li>
       </ul>
     </div>
   );
