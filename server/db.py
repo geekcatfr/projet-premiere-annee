@@ -90,6 +90,7 @@ def init_rows(db_conn, db_name):
                 print(error)
                 writeInLog(error)
 
+    
 
 class DatabaseConnection():
 
@@ -221,16 +222,18 @@ class DatabaseConnection():
         self.connect()
         db_cursor = self.conn.cursor()
         get_formation_req = (
-            f"SELECT formation_id, name, description from formations WHERE formation_id = {formation_id}")
+            f"SELECT * from formations WHERE formation_id = {formation_id}")
         db_cursor.execute(get_formation_req)
+        try:
+            print(db_cursor)
 
-        print(db_cursor)
+            for id, name, desc, content, teacher in db_cursor:
+                formation = {"id": id, "title": name, "description": desc, "content": content, "teacher": teacher}
 
-        for id, name, desc in db_cursor:
-            formation = {"id": id, "title": name, "description": desc}
-
-        self.disconnect()
-        return {}
+            self.disconnect()
+            return formation
+        except UnboundLocalError:
+            return {"error": "this formation does not exist"}
 
     def get_token(self, user):
         self.connect()

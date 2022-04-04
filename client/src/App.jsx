@@ -26,7 +26,7 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<WelcomeAdmin />} />
-        <Route path="/admin/formations" element={<FormationPage />}></Route>
+        <Route path="/admin/formations" element={<FormationPage />} />
         <Route path="/admin/formations/edit/:id" element={<EditPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
