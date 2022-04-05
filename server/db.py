@@ -176,6 +176,20 @@ class DatabaseConnection():
         self.conn.commit()
         self.disconnect()
 
+    def update_formation(self, new_formation, formation_id):
+        
+        self.connect()
+        edit_formation = ("UPDATE `formations` "
+                            f"SET `name` = \"{new_formation.name}\", "
+                            f"`description` = \"{new_formation.description}\", "
+                            f"`content` = \"{new_formation.content}\", "
+                            f"`teacher` = \"{new_formation.teacher}\" "
+                            f"WHERE `formation_id` = {formation_id}")
+        db_cursor = self.conn.cursor()
+        db_cursor.execute(edit_formation)
+        self.conn.commit()
+        self.disconnect()
+
     def check_user(self, username, password):
         self.connect()
         db_cursor = self.conn.cursor(buffered=True)
