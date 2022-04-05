@@ -66,7 +66,7 @@ def add_formation(formation: Formation):
     return {True}
 
 
-@app.post("/formations/delete")
+@app.get("/formations/delete/{formation_id}")
 def delete_formation(formation_id: int):
     db.delete_row(formation_id)
 
