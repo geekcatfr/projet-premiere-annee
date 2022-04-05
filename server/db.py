@@ -167,11 +167,14 @@ class DatabaseConnection():
         db_cursor.close()
         self.disconnect()
 
-    def delete_row(self) -> None:
+    def delete_row(self, formation_id) -> None:
         self.connect()
-        delete_user = ("")
+        db_cursor = self.conn.cursor()
+        delete_user = ("DELETE FROM `formations` "
+                        f"where `formation_id` = {formation_id}")
+        db_cursor.execute(delete_user)
+        self.conn.commit()
         self.disconnect()
-        pass
 
     def check_user(self, username, password):
         self.connect()

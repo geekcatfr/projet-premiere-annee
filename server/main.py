@@ -56,7 +56,6 @@ def list_formations():
 
 @app.get("/formations/{formation_id}")
 def formation_content(formation_id: int):
-
     return db.get_formation(formation_id)
 
 
@@ -68,8 +67,10 @@ def add_formation(formation: Formation):
 
 
 @app.post("/formations/delete")
-def delete_formation(formation: Formation):
-    return {"isDeleted": True, "formationName": formation.name}
+def delete_formation(formation_id: int):
+    db.delete_row(formation_id)
+
+    return {"isDeleted": True}
 
 
 @app.post('/users/login/')
