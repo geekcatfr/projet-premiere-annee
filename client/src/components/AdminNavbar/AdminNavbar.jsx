@@ -15,43 +15,43 @@ function NavbarElement(props) {
   return (
     <div className="NavBar ">
       <div className="NavText">
-      <ul>
-        <li className="Title">
-          Formations
+        <ul>
+          <li className="Title">
+            Formations
             <ul>
               <li>Ajouter</li>
             </ul>
-          </div>
-        </li>
+          </li>
 
-        <li className="Title">
-          Paramètres
-          <div className="NavText">
-            <ul>
-              <li>Utilisateurs</li>
-              <li>Sauvegardes</li>
-            </ul>
-          </div>
-        </li>
+          <li className="Title">
+            Paramètres
+            <div className="NavText">
+              <ul>
+                <li>Utilisateurs</li>
+                <li>Sauvegardes</li>
+              </ul>
+            </div>
+          </li>
 
-        <li className="Title">
-          Pages
-          <div className="NavText">
-            <ul>
-              <li>Ajouter une page</li>
-            </ul>
-          </div>
-        </li>
+          <li className="Title">
+            Pages
+            <div className="NavText">
+              <ul>
+                <li>Ajouter une page</li>
+              </ul>
+            </div>
+          </li>
 
-        <li className="Title">
-          Statistiques
-          <div className="NavText">
-            <ul>
-              <li>Exporter</li>
-            </ul>
-          </div>
-        </li>
-      </ul>
+          <li className="Title">
+            Statistiques
+            <div className="NavText">
+              <ul>
+                <li>Exporter</li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }
