@@ -11,11 +11,11 @@ export default function FormationPage() {
   );
 }
 
-function FormationTable(props) {
+function FormationTable() {
   const [formations, setFormations] = useState([]);
   const [error, setError] = useState(null);
 
-  const FormationRows = (props) =>
+  const FormationRows = () =>
     formations.map((formation) => (
       <FormationRow
         key={formation.id}
@@ -61,6 +61,11 @@ function FormationTable(props) {
 function FormationRow(props) {
   const [selected, setIsSelected] = useState(false);
 
+  const deleteRequest = () => {
+    fetch(`http://localhost:8000/formations/delete/${props.formationId}`);
+    window.location.reload();
+  };
+
   return (
     <tr className="formation-row">
       <td className="checkbox">
@@ -71,10 +76,16 @@ function FormationRow(props) {
         <p className="formation-title">{props.title}</p>
         <ul className="formation-actions">
           <li>
-            <Link to={`edit/${props.formationId}`}>Editer</Link>
+            <Link
+              to={`http://localhost:8000/formations/edit/${props.formationId}`}
+            >
+              Editer
+            </Link>
           </li>
           <li>
-            <Link to={`delete/${props.formationId}`}>Supprimer</Link>
+            <a href="#" onClick={deleteRequest}>
+              Supprimer
+            </a>
           </li>
         </ul>
       </td>
