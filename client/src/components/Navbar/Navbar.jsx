@@ -1,4 +1,4 @@
-import { Outlet, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { React, useState, useEffect } from "react";
 
 import "./Navbar.css";
@@ -29,15 +29,17 @@ export default function Navbar() {
           <Link to="/formations">Formations</Link>
           <Link to="/about">A propos</Link>
           {isConnected ? (
-            <Link to="/" onClick={deleteToken}>
-              Se déconnecter
-            </Link>
+            <>
+              <Link to="/admin">Administration</Link>
+              <Link to="/" onClick={deleteToken}>
+                Se déconnecter
+              </Link>
+            </>
           ) : (
             <Link to="/login">Se connecter</Link>
           )}
         </div>
       </div>
-      <Outlet />
     </nav>
   );
 }
