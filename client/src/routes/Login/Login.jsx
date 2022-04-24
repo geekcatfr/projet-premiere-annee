@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Logo from "../../assets/icons/logo-ndlp.png";
+import { checkLoginTokenStorage } from "../../utils/login";
 import "./Login.css";
 
 export default function Login() {
@@ -18,7 +19,7 @@ export default function Login() {
       method: "POST",
       mode: "cors",
       headers,
-      body: JSON.stringify({ username: user, password: password }),
+      body: JSON.stringify({ username: user, password }),
     })
       .then((res) => res.json())
       .then(
@@ -36,16 +37,8 @@ export default function Login() {
       );
   };
 
-  const checkToken = () => {
-    if (localStorage.getItem("token") == null) {
-      setisTokenSet(false);
-    } else {
-      setisTokenSet(true);
-    }
-  };
-
   useEffect(() => {
-    checkToken();
+    checkLoginTokenStorage() ? setisTokenSet(true) : setisTokenSet(false);
   });
 
   if (!isTokenSet) {
