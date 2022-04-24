@@ -1,3 +1,4 @@
+import sys
 from typing import Optional
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,7 +30,7 @@ class User(BaseModel):
 class Formation(BaseModel):
     name: str
     description: Optional[str] = None
-    content: str
+    content: Optional[str] = None
     teacher: Optional[str] = None
 
 
@@ -64,6 +65,7 @@ def add_formation(formation: Formation):
     db.insert_formation(formation)
     print(formation.content)
     return {True}
+
 
 @app.post("/formations/edit")
 def edit_formation(formation: Formation, formation_id: int):
