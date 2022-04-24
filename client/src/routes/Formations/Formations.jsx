@@ -58,14 +58,15 @@ export default function Formations() {
 }
 
 function FormationBox(props) {
+  const { title, description } = props;
   return (
     <div className="formation-description">
       <img
         src="https://www.studyrama.com/modules/custom/stu_anfor/public/images/annuaire-diplomes.svg"
         alt="C'est un diplôme"
       />
-      <h2>{props.title}</h2>
-      <p>{props.description}</p>
+      <h2>{title}</h2>
+      <p>{description}</p>
     </div>
   );
 }
