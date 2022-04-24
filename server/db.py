@@ -53,14 +53,15 @@ def init_rows(db_conn, db_name):
                        "`user_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                        "`username` varchar(32) NOT NULL, "
                        "`password` varchar(512) NOT NULL "
+                       "`is_admin` bool NOT NULL"
                        ") ENGINE=InnoDB")
 
     tables['formations'] = ("CREATE TABLE `formations` ( "
                             "`formation_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                             "`name` TINYTEXT NOT NULL, "
                             "`description` TEXT, "
-                            "`content` TEXT NOT NULL, "
-                            "`teacher` TINYTEXT NOT NULL"
+                            "`content` TEXT, "
+                            "`teacher` TINYTEXT"
                             ") ENGINE=InnoDB")
 
     tables['pages'] = ("CREATE TABLE `pages` ( "
@@ -90,7 +91,6 @@ def init_rows(db_conn, db_name):
                 print(error)
                 writeInLog(error)
 
-    
 
 class DatabaseConnection():
 
@@ -171,20 +171,20 @@ class DatabaseConnection():
         self.connect()
         db_cursor = self.conn.cursor()
         delete_user = ("DELETE FROM `formations` "
-                        f"where `formation_id` = {formation_id}")
+                       f"where `formation_id` = {formation_id}")
         db_cursor.execute(delete_user)
         self.conn.commit()
         self.disconnect()
 
     def update_formation(self, new_formation, formation_id):
-        
+
         self.connect()
         edit_formation = ("UPDATE `formations` "
-                            f"SET `name` = \"{new_formation.name}\", "
-                            f"`description` = \"{new_formation.description}\", "
-                            f"`content` = \"{new_formation.content}\", "
-                            f"`teacher` = \"{new_formation.teacher}\" "
-                            f"WHERE `formation_id` = {formation_id}")
+                          f"SET `name` = \"{new_formation.name}\", "
+                          f"`description` = \"{new_formation.description}\", "
+                          f"`content` = \"{new_formation.content}\", "
+                          f"`teacher` = \"{new_formation.teacher}\" "
+                          f"WHERE `formation_id` = {formation_id}")
         db_cursor = self.conn.cursor()
         db_cursor.execute(edit_formation)
         self.conn.commit()
@@ -245,7 +245,8 @@ class DatabaseConnection():
             print(db_cursor)
 
             for id, name, desc, content, teacher in db_cursor:
-                formation = {"id": id, "title": name, "description": desc, "content": content, "teacher": teacher}
+                formation = {"id": id, "title": name, "description": desc,
+                             "content": content, "teacher": teacher}
 
             self.disconnect()
             return formation
