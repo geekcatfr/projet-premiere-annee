@@ -48,6 +48,11 @@ def init_rows(db_conn, db_name):
     db_conn.database = db_name
     db_cursor = db_conn.cursor()
     tables = {}
+    tables['teachers'] = ("CREATE TABLE `teachers` ("
+                          "teacher_id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+                          "first_name varchar(64) NOT NULL, "
+                          "last_name varchar(64) NOT NULL"
+                          ") ENGINE=InnoDB")
 
     tables['users'] = ("CREATE TABLE `users` ( "
                        "`user_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
@@ -61,7 +66,10 @@ def init_rows(db_conn, db_name):
                             "`name` TINYTEXT NOT NULL, "
                             "`description` TEXT, "
                             "`content` TEXT, "
-                            "`teacher` TINYTEXT"
+                            "`teacher` int, "
+                            "`grade` FLOAT(2), "
+                            "`number_of_ratings` int, "
+                            "FOREIGN KEY (teacher) REFERENCES teachers(teacher_id)"
                             ") ENGINE=InnoDB")
 
     tables['pages'] = ("CREATE TABLE `pages` ( "
@@ -224,14 +232,14 @@ class DatabaseConnection():
         self.connect()
         db_cursor = self.conn.cursor()
         get_formations_request = (
-            f"SELECT formation_id, name, description, teacher FROM formations")
+            f"SELECT formation_id, name, description, teacher, grade, number_of_ratings FROM formations")
         formations_list = []
 
         db_cursor.execute(get_formations_request)
 
-        for id, name, desc, teacher in db_cursor:
+        for id, name, desc, teacher, rating, nbrRating in db_cursor:
             formations_list.append(
-                {"id": id, "title": name, "description": desc, "teacher": teacher})
+                {"id": id, "title": name, "description": desc, "teacher": teacher, "rating": rating, "nbrPeopleRating": nbrRating})
         self.disconnect()
         return formations_list
 
@@ -244,14 +252,34 @@ class DatabaseConnection():
         try:
             print(db_cursor)
 
-            for id, name, desc, content, teacher in db_cursor:
+            for id, name, desc, content, teacher, grade, nbrRating in db_cursor:
                 formation = {"id": id, "title": name, "description": desc,
-                             "content": content, "teacher": teacher}
+                             "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
 
             self.disconnect()
             return formation
         except UnboundLocalError:
             return {"error": "this formation does not exist"}
+
+    def get_teachers(self):
+        teachers = []
+        self.connect()
+        db_cursor = self.conn.cursor()
+        get_teacher_req = (f"SELECT * FROM teachers")
+        db_cursor.execute(get_teacher_req)
+
+        for firstName, lastName in db_cursor:
+            teachers.append({"firstName": firstName, "lastName": lastName})
+        self.disconnect()
+        return teachers 
+
+    def add_teacher(self, data):
+        self.connect()
+        db_cursor = self.conn.cursor()
+        add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
+        f"VALUES ({data.first_name}, {data.last_name})")
+        db_cursor.execute(add_teacher_req)
+        self.disconnect()
 
     def get_token(self, user):
         self.connect()
