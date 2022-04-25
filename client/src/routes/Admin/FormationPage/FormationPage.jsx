@@ -54,7 +54,7 @@ function AddFormationButton() {
       method: "POST",
       mode: "cors",
       headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ name: formationName }),
+      body: JSON.stringify({ name: formationName, teacher: 3 }),
     });
   };
   return (
