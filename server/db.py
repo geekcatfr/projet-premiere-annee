@@ -52,8 +52,8 @@ def init_rows(db_conn, db_name):
     tables['users'] = ("CREATE TABLE `users` ( "
                        "`user_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                        "`username` varchar(32) NOT NULL, "
-                       "`password` varchar(512) NOT NULL "
-                       "`is_admin` bool NOT NULL"
+                       "`password` varchar(512) NOT NULL, "
+                       "`is_admin` BOOLEAN NOT NULL"
                        ") ENGINE=InnoDB")
 
     tables['formations'] = ("CREATE TABLE `formations` ( "
