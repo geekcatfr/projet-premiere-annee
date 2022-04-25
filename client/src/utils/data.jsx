@@ -7,6 +7,5 @@ export async function fetchFormations() {
 export async function fetchFormation(formationId) {
   const req = await fetch(`http://localhost:8000/formations/${formationId}`);
   const formation = await req.json();
-
   return formation;
 }
