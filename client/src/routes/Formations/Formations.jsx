@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fetchFormations } from "../../utils/data";
 import "./Formations.css";
 
 export default function Formations() {
@@ -8,18 +9,16 @@ export default function Formations() {
   const [formations, setFormations] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/formations")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setIsLoaded(true);
-          setFormations(result.formations);
-        },
-        (err) => {
-          setIsLoaded(true);
-          setError(err);
-        }
-      );
+    fetchFormations().then(
+      (res) => {
+        setIsLoaded(true);
+        setFormations(res.formations);
+      },
+      (err) => {
+        setIsLoaded(true);
+        setError(err);
+      }
+    );
   }, []);
 
   if (error) {
