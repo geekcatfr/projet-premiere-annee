@@ -25,6 +25,8 @@ def create_database(db_name, db_conn):
 
 
 def update_database() -> None:
+    tables = get_tables()
+
     pass
 
 
@@ -41,12 +43,7 @@ def writeInLog(error):
         open(log_file, 'x').close()
 
 
-def init_rows(db_conn, db_name):
-    """Init a dict of tables,
-    the key is the name of the table
-    write the SQL request as a value, and write them in db_conn"""
-    db_conn.database = db_name
-    db_cursor = db_conn.cursor()
+def get_tables():
     tables = {}
     tables['teachers'] = ("CREATE TABLE `teachers` ("
                           "teacher_id int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
@@ -86,6 +83,16 @@ def init_rows(db_conn, db_name):
                         "`user` int, "
                         "FOREIGN KEY (`user`) REFERENCES users(user_id) "
                         ") ENGINE=InnoDB")
+    return tables
+
+
+def init_rows(db_conn, db_name):
+    """Init a dict of tables,
+    the key is the name of the table
+    write the SQL request as a value, and write them in db_conn"""
+    db_conn.database = db_name
+    db_cursor = db_conn.cursor()
+    tables = get_tables()
 
     for table, request in tables.items():
         try:
@@ -133,152 +140,156 @@ class DatabaseConnection():
 
     def init_database(self):
         self.connect()
-        db_cursor = self.conn.cursor()
-        try:
-            db_cursor.execute(f"USE {self.name}")
-            db_cursor = self.conn.cursor()
-        except mysql.connector.Error as error:
-            if error.errno == errorcode.ER_BAD_DB_ERROR:
-                writeInLog(error)
-                print(
-                    f"[NOTE] Database {self.name} doesn't exist. Creating it...")
-                create_database(self.name, db_cursor)
-                init_rows(self.conn, self.name)
-                self.conn.database = self.name
+        with self.conn.cursor() as db_cursor:
+            try:
+                db_cursor.execute(f"USE {self.name}")
+                db_cursor = self.conn.cursor()
+            except mysql.connector.Error as error:
+                if error.errno == errorcode.ER_BAD_DB_ERROR:
+                    writeInLog(error)
+                    print(
+                        f"[NOTE] Database {self.name} doesn't exist. Creating it...")
+                    create_database(self.name, db_cursor)
+                    init_rows(self.conn, self.name)
+                    self.conn.database = self.name
         self.disconnect()
-        db_cursor.close()
 
     def insert_row(self, type, **data):
         self.connect()
-        db_cursor = self.conn.cursor()
-        add_user = ("INSERT INTO users "
-                    "(username, password) "
-                    "VALUES (\"{}\", \"{}\")")
 
-        if type == 'user':
-            add_user = add_user.format(data['username'], data['password'])
-            db_cursor.execute(add_user)
+        with self.conn.cursor() as db_cursor:
+            add_user = ("INSERT INTO users "
+                        "(username, password) "
+                        "VALUES (\"{}\", \"{}\")")
 
-        self.conn.commit()
-        db_cursor.close()
+            if type == 'user':
+                add_user = add_user.format(data['username'], data['password'])
+                db_cursor.execute(add_user)
+
+            self.conn.commit()
+
         self.disconnect()
-        pass
 
     def insert_formation(self, data):
         self.connect()
         db_cursor = self.conn.cursor()
-        add_formation = ("INSERT INTO formations "
-                         "(name, description, content, teacher) "
-                         f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\") ")
-        db_cursor.execute(add_formation)
-        self.conn.commit()
-        db_cursor.close()
+        with self.conn.cursor() as db_cursor:
+            add_formation = ("INSERT INTO formations "
+                             "(name, description, content, teacher) "
+                             f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\") ")
+            db_cursor.execute(add_formation)
+            self.conn.commit()
+
         self.disconnect()
 
     def delete_row(self, formation_id) -> None:
-        self.connect()
-        db_cursor = self.conn.cursor()
         delete_user = ("DELETE FROM `formations` "
                        f"where `formation_id` = {formation_id}")
-        db_cursor.execute(delete_user)
-        self.conn.commit()
+        self.connect()
+        with self.conn.cursor() as db_cursor:
+            db_cursor.execute(delete_user)
+            self.conn.commit()
+
         self.disconnect()
 
     def update_formation(self, new_formation, formation_id):
-
-        self.connect()
         edit_formation = ("UPDATE `formations` "
                           f"SET `name` = \"{new_formation.name}\", "
                           f"`description` = \"{new_formation.description}\", "
                           f"`content` = \"{new_formation.content}\", "
                           f"`teacher` = \"{new_formation.teacher}\" "
                           f"WHERE `formation_id` = {formation_id}")
-        db_cursor = self.conn.cursor()
-        db_cursor.execute(edit_formation)
-        self.conn.commit()
+
+        self.connect()
+        with self.conn.cursor() as db_cursor:
+            db_cursor.execute(edit_formation)
+            self.conn.commit()
+
         self.disconnect()
 
     def check_user(self, username, password):
-        self.connect()
-        db_cursor = self.conn.cursor(buffered=True)
         select_user = (
             f"SELECT username, password FROM users WHERE username = \"{username}\"")
+        self.connect()
+        with self.conn.cursor(buffered=True) as db_cursor:
 
-        db_cursor.execute(f"USE {self.name}")
-        db_cursor.execute(select_user)
+            db_cursor.execute(f"USE {self.name}")
+            db_cursor.execute(select_user)
 
-        for user, db_pass in db_cursor:
-            if username == user and db_pass == password:
-                return {"username": username, "password": password}
-            else:
-                return None
-        db_cursor.close()
+            for user, db_pass in db_cursor:
+                if username == user and db_pass == password:
+                    return {"username": username, "password": password}
+                else:
+                    return None
+
         self.disconnect()
 
     def get_user_infos(self, username):
-        self.connect()
-        db_cursor = self.conn.cursor()
         get_id_request = (
             f"SELECT user_id FROM users WHERE username = \"{username}\"")
+        self.connect()
 
-        db_cursor.execute(get_id_request)
+        with self.conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(get_id_request)
+            for id in db_cursor:
+                return {"id": id, "username": username}
 
-        for id in db_cursor:
-            return {"id": id, "username": username}
-        db_cursor.close()
         self.disconnect()
 
     def get_formations(self):
-        self.connect()
-        db_cursor = self.conn.cursor()
         get_formations_request = (
             f"SELECT formation_id, name, description, teacher, grade, number_of_ratings FROM formations")
+        self.connect()
         formations_list = []
+        with self.conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(get_formations_request)
+            for id, name, desc, teacher, rating, nbrRating in db_cursor:
+                formations_list.append(
+                    {"id": id, "title": name, "description": desc, "teacher": teacher, "rating": rating, "nbrPeopleRating": nbrRating})
 
-        db_cursor.execute(get_formations_request)
-
-        for id, name, desc, teacher, rating, nbrRating in db_cursor:
-            formations_list.append(
-                {"id": id, "title": name, "description": desc, "teacher": teacher, "rating": rating, "nbrPeopleRating": nbrRating})
         self.disconnect()
+
         return formations_list
 
     def get_formation(self, formation_id):
-        self.connect()
-        db_cursor = self.conn.cursor()
         get_formation_req = (
             f"SELECT * from formations WHERE formation_id = {formation_id}")
-        db_cursor.execute(get_formation_req)
-        try:
-            print(db_cursor)
+        self.connect()
+        with self.conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(get_formation_req)
+            try:
+                print(db_cursor)
 
-            for id, name, desc, content, teacher, grade, nbrRating in db_cursor:
-                formation = {"id": id, "title": name, "description": desc,
-                             "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
+                for id, name, desc, content, teacher, grade, nbrRating in db_cursor:
+                    formation = {"id": id, "title": name, "description": desc,
+                                 "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
 
-            self.disconnect()
-            return formation
-        except UnboundLocalError:
-            return {"error": "this formation does not exist"}
+                self.disconnect()
+                return formation
+            except UnboundLocalError:
+                return {"error": "this formation does not exist"}
 
     def get_teachers(self):
         teachers = []
-        self.connect()
-        db_cursor = self.conn.cursor()
         get_teacher_req = (f"SELECT * FROM teachers")
-        db_cursor.execute(get_teacher_req)
+        self.connect()
+        with self.conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(get_teacher_req)
 
-        for firstName, lastName in db_cursor:
-            teachers.append({"firstName": firstName, "lastName": lastName})
+            for firstName, lastName in db_cursor:
+                teachers.append({"firstName": firstName, "lastName": lastName})
+
         self.disconnect()
-        return teachers 
+        return teachers
 
     def add_teacher(self, data):
-        self.connect()
-        db_cursor = self.conn.cursor()
         add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
-        f"VALUES ({data.first_name}, {data.last_name})")
-        db_cursor.execute(add_teacher_req)
+                           f"VALUES (\"{data.first_name}\", \"{data.last_name}\")")
+        print(add_teacher_req)
+        self.connect()
+        with self.conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(add_teacher_req)
+
         self.disconnect()
 
     def get_token(self, user):

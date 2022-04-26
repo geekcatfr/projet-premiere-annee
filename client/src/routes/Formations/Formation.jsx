@@ -19,6 +19,20 @@ export default function Formation() {
           ? formation.content
           : "Il n'y a aucun contenu dans cette section pour le moment."}
       </p>
+      <FormationRating
+        rating={formation.grade}
+        nbrPeopleRating={formation.nbrPeopleRating}
+      />
     </div>
+  );
+}
+
+function FormationRating(props) {
+  const { rating, nbrPeopleRating } = props;
+  return (
+    <>
+      <input type="number" />
+      /5 (Note moyenne de )
+    </>
   );
 }

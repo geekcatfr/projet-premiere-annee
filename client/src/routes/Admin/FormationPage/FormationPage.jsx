@@ -13,10 +13,10 @@ export default function FormationPage() {
 
   useEffect(() => {
     fetch("http://localhost:8000/formations")
-      .then((res) => res.json())
+      .then((res1) => res1.json())
       .then(
-        (result) => {
-          setFormations(result.formations);
+        (res1) => {
+          setFormations(res1.formations);
         },
         (err) => {
           setError(true);
@@ -34,13 +34,17 @@ export default function FormationPage() {
         <p>
           Aucune formation existe actuellement. Commencez par en créer une !
         </p>
-        <AddFormationButton />
+        <div className="formation-action-buttons">
+          <AddFormationButton />
+          <AddTeacherButton />
+        </div>
       </div>
     );
   }
   return (
     <div>
       <h1>Formations</h1>
+
       <AddFormationButton />
       <FormationTable formations={formations} />
     </div>
@@ -64,7 +68,26 @@ function AddFormationButton() {
       type="button"
     >
       <FontAwesomeIcon icon="fa-solid fa-plus" />
-      <span>Ajouter</span>
+      <span>Ajouter une formation</span>
+    </button>
+  );
+}
+
+function AddTeacherBox() {
+  // TODO
+  return (
+    <div>
+      <h2>Nouvelle formation</h2>
+      
+    </div>
+  )
+}
+
+function AddTeacherButton() {
+  return (
+    <button className="add_formation_button" type="button">
+      <FontAwesomeIcon icon="fa-solid fa-user-pen" />
+      <span>Ajouter un professeur</span>
     </button>
   );
 }

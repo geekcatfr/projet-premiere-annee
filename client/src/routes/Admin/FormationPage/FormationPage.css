@@ -45,3 +45,8 @@ button.add_formation_button {
   color: var(--font-color);
   background-color: var(--main-blue);
 }
+
+.formation-action-buttons {
+  display: flex;
+  gap: 1.25rem;
+}

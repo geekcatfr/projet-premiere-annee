@@ -26,9 +26,11 @@ class User(BaseModel):
     username: str
     password: str
 
+
 class Teacher(BaseModel):
     first_name: str
     last_name: str
+
 
 class Formation(BaseModel):
     name: str
@@ -82,9 +84,15 @@ def delete_formation(formation_id: int):
 
     return {"isDeleted": True}
 
+
 @app.get("/teachers")
 def get_teachers():
     return db.get_teachers()
+
+
+@app.post("/teachers/add")
+def add_teacher(teacher: Teacher):
+    db.add_teacher(teacher)
 
 
 @app.post('/users/login/')
