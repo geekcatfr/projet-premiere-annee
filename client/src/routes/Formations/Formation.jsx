@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchFormation } from "../../utils/data";
+import "./Formations.css";
 
 export default function Formation() {
   const params = useParams();
@@ -11,16 +12,17 @@ export default function Formation() {
     setFormation(f);
   }, []);
 
+  console.log(formation);
   return (
     <div>
       <h1>{formation.title}</h1>
       <p>
         {formation.content === "None"
-          ? formation.content
-          : "Il n'y a aucun contenu dans cette section pour le moment."}
+          ? "Il n'y a aucun contenu dans cette section pour le moment."
+          : formation.content}
       </p>
       <FormationRating
-        rating={formation.grade}
+        rating={formation.rating}
         nbrPeopleRating={formation.nbrPeopleRating}
       />
     </div>
@@ -29,10 +31,16 @@ export default function Formation() {
 
 function FormationRating(props) {
   const { rating, nbrPeopleRating } = props;
+  console.log(rating);
   return (
     <>
-      <input type="number" />
-      /5 (Note moyenne de )
+      <div className="rating-form">
+        <input type="number" />
+        <input type="submit" />
+      </div>
+      <p>
+        /5 (Note moyenne de {rating} étoiles avec {nbrPeopleRating} votants)
+      </p>
     </>
   );
 }

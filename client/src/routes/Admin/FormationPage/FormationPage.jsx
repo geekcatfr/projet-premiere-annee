@@ -41,7 +41,7 @@ export default function FormationPage() {
       <h1>Formations</h1>
       {teachers.length === 0
         ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
-        : "Aucune formation existe actuellement. Commencez par en créer une !"}
+        : "Vous pouvez ajouter des formations"}
       <AddFormationButton />
       <AddTeacherButton />
       <FormationTable formations={formations} />
@@ -56,7 +56,7 @@ function AddFormationButton() {
       method: "POST",
       mode: "cors",
       headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ name: formationName, teacher: 3 }),
+      body: JSON.stringify({ name: formationName, teacher: 1 }),
     });
   };
   return (
@@ -76,6 +76,10 @@ function AddTeacherBox() {
   return (
     <div>
       <h2>Nouveau professeur</h2>
+      <label htmlFor="firstName">Prénom</label>
+      <input class="text" id="firstName"/>
+      <label htmlFor="lastName">Nom</label>
+      <input class="text" id="lastName"/>
     </div>
   );
 }

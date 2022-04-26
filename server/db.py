@@ -167,10 +167,10 @@ class DatabaseConnection():
         conn = self.connect()
         with conn.cursor() as db_cursor:
             add_formation = ("INSERT INTO formations "
-                             "(name, description, content, teacher) "
-                             f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\") ")
+                             "(name, description, content, teacher, grade, number_of_ratings) "
+                             f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\", 0, 0) ")
             db_cursor.execute(add_formation)
-            self.conn.commit()
+            conn.commit()
 
         conn.disconnect()
 
@@ -263,7 +263,7 @@ class DatabaseConnection():
 
     def get_teachers(self):
         teachers = []
-        get_teacher_req = (f"SELECT * FROM teachers")
+        get_teacher_req = (f"SELECT first_name, last_name FROM teachers")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
             db_cursor.execute(get_teacher_req)
@@ -273,6 +273,14 @@ class DatabaseConnection():
 
         conn.disconnect()
         return teachers
+
+    def update_note(self, formation_id, new_note):
+        get_notes_req = (f"SELECT grade, number_of_ratings FROM formations WHERE formation_id = {formation_id}")
+
+        
+        update_note_req = ("UPDATE `formations`"
+                           "SET ")
+        
 
     def add_teacher(self, data):
         add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "

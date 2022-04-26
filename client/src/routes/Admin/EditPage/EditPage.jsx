@@ -1,13 +1,22 @@
-import {React, useState} from "react";
+import { React, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { fetchFormation } from "../../../utils/data";
+
+import { fetchFormation, fetchTeachers } from "../../../utils/data";
 import "./edit.css";
 
 export default function EditPage(props) {
-  const params = useParams()
+  const params = useParams();
   const [content, setContent] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [error, setError] = useState();
 
-  useState(() => fetchFormation(parseInt(params.id, 10)).then(res => setContent(res)))
+  useEffect(() => {
+    fetchFormation(parseInt(params.id, 10)).then((res) => setContent(res));
+    fetchTeachers().then(
+      (res) => setTeachers(res.teachers),
+      (error) => setError(error)
+    );
+  });
   return (
     <div>
       <h1>Editer</h1>
@@ -21,15 +30,27 @@ export default function EditPage(props) {
       </div>
       <div>
         <p>Formateur</p>
+        <select>
+          {teachers.map((teacher) => (
+            <option key={teacher.id}>
+              {teacher.firstName} {teacher.lastName}
+            </option>
+          ))}
+        </select>
       </div>
-      <input type="submit"/>
+      <input type="submit" />
     </div>
   );
 }
 
 function TextArea(props) {
-  const {content} = props;
+  const { content } = props;
   return (
-    <input type="text" id="content" placeholder="Entrez du contenu..." value={content}/>
+    <input
+      type="text"
+      id="content"
+      placeholder="Entrez du contenu..."
+      value={content}
+    />
   );
 }

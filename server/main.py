@@ -77,6 +77,14 @@ def edit_formation(formation: Formation, formation_id: int):
     db.update_formation(formation, formation_id)
     return {"isEdited": True}
 
+@app.post("/formation/update_note")
+def update_note(formation: int, note: int):
+    if note >= 0 and note <= 5:
+        db.update_note(note)
+        return {"isSaved": True}
+    else:
+        return {"error": "value is not valid"}
+
 
 @app.get("/formations/delete/{formation_id}")
 def delete_formation(formation_id: int):
