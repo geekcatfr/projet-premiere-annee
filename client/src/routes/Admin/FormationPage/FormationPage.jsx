@@ -10,8 +10,17 @@ library.add(fas);
 export default function FormationPage() {
   const [formations, setFormations] = useState([]);
   const [error, setError] = useState(null);
+  const [teachers, setTeachers] = useState([]);
 
   useEffect(() => {
+    fetch("http://localhost:8000/teachers")
+      .then((res) => res.json())
+      .then(
+        (res) => setTeachers(res),
+        (err) => {
+          setError(true);
+        }
+      );
     fetch("http://localhost:8000/formations")
       .then((res1) => res1.json())
       .then(
@@ -27,25 +36,14 @@ export default function FormationPage() {
   if (error) {
     return <p>Impossible de charger le contenu de la page</p>;
   }
-  if (formations.length === 0) {
-    return (
-      <div>
-        <h1>Formations</h1>
-        <p>
-          Aucune formation existe actuellement. Commencez par en créer une !
-        </p>
-        <div className="formation-action-buttons">
-          <AddFormationButton />
-          <AddTeacherButton />
-        </div>
-      </div>
-    );
-  }
   return (
     <div>
       <h1>Formations</h1>
-
+      {teachers.length === 0
+        ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
+        : "Aucune formation existe actuellement. Commencez par en créer une !"}
       <AddFormationButton />
+      <AddTeacherButton />
       <FormationTable formations={formations} />
     </div>
   );
@@ -77,10 +75,9 @@ function AddTeacherBox() {
   // TODO
   return (
     <div>
-      <h2>Nouvelle formation</h2>
-      
+      <h2>Nouveau professeur</h2>
     </div>
-  )
+  );
 }
 
 function AddTeacherButton() {
@@ -105,20 +102,16 @@ function FormationTable(props) {
         </tr>
       </thead>
       <tbody>
-        <FormationRows formations={formations} />
+        {formations.map((formation) => (
+          <FormationRow
+            key={formation.id}
+            formationId={formation.id}
+            title={formation.title}
+          />
+        ))}
       </tbody>
     </table>
   );
-}
-
-function FormationRows(props) {
-  return props.formations.map((formation) => (
-    <FormationRow
-      key={formation.id}
-      formationId={formation.id}
-      title={formation.title}
-    />
-  ));
 }
 
 function FormationRow(props) {
