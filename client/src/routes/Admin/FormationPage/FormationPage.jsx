@@ -4,7 +4,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "./FormationPage.css";
-import { sendNewTeacherReq } from "../../../utils/data";
+import PropTypes from 'prop-types';
+import { sendNewTeacherReq, addFormationAction } from "../../../utils/data";
+
 
 library.add(fas);
 
@@ -13,27 +15,22 @@ export default function FormationPage() {
   const [error, setError] = useState(null);
   const [teachers, setTeachers] = useState([]);
   const [isTeacherBoxToggled, setIsTeacherBoxToggled] = useState(false);
+  const [isFormationBoxToggled, setIsFormationBoxToggled] = useState(false)
 
   const toggleTeacherBox = () => {
     setIsTeacherBoxToggled(!isTeacherBoxToggled);
   };
 
-  const addFormationAction = () => {
-    const formationName = prompt("Entrez le nom d'une formation");
-    fetch("http://localhost:8000/formations/add", {
-      method: "POST",
-      mode: "cors",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ name: formationName, teacher: 1 }),
-    });
-  };
+  const toggleFormationBox = () => {
+    setIsFormationBoxToggled(!isFormationBoxToggled)
+  }
 
   useEffect(() => {
     fetch("http://localhost:8000/teachers")
       .then((res) => res.json())
       .then(
         (res) => setTeachers(res),
-        (err) => {
+        () => {
           setError(true);
         }
       );
@@ -43,7 +40,7 @@ export default function FormationPage() {
         (res1) => {
           setFormations(res1.formations);
         },
-        (err) => {
+        () => {
           setError(true);
         }
       );
@@ -59,7 +56,7 @@ export default function FormationPage() {
         ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
         : "Vous pouvez ajouter des formations"}
       <button
-        onClick={addFormationAction}
+        onClick={toggleFormationBox}
         className="add_formation_button"
         type="button"
       >
@@ -74,6 +71,7 @@ export default function FormationPage() {
         <FontAwesomeIcon icon="fa-solid fa-user-pen" />
         <span>Ajouter un professeur</span>
       </button>
+      {isFormationBoxToggled ? <AddFormationBox teachers={teachers}/> : null}
       {isTeacherBoxToggled ? <AddTeacherBox /> : null}
       <FormationTable formations={formations} />
     </div>
@@ -113,6 +111,29 @@ function AddTeacherBox() {
   );
 }
 
+function AddFormationBox({teachers}) {
+  const [formationName, setFormationName] = useState(null)
+  const [teacherId, setTeacherId] = useState(null)
+
+  const handleRequest = () => {
+    addFormationAction(formationName, teacherId)
+  }
+  return (
+    <>
+      <h2>Ajouter une nouvelle formation</h2>
+      <form onSubmit={handleRequest}>
+        <label id="teacherName">Nom du professeur</label>
+        <input type="text" id="teacherName" name="teacherName"/>
+        <select>
+        {teachers.map((teacher) => (
+          <option key={teacher.id}>{teacher.firstName} {teacher.lastName}</option>
+        ))}
+        </select>
+      </form>
+    </>
+  )
+}
+
 function FormationTable(props) {
   const { formations } = props;
   return (
@@ -136,6 +157,9 @@ function FormationTable(props) {
       </tbody>
     </table>
   );
+}
+FormationTable.propTypes = {
+  formations: PropTypes.array.isRequired
 }
 
 function FormationRow(props) {
@@ -169,3 +193,4 @@ function FormationRow(props) {
     </tr>
   );
 }
+FormationRow.propTypes = {formationId: PropTypes.number.isRequired, title: PropTypes.string.isRequired}

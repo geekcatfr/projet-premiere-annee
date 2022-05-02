@@ -25,3 +25,12 @@ export async function sendNewTeacherReq(firstName, lastName) {
     body: JSON.stringify({ first_name: firstName, last_name: lastName }),
   });
 }
+
+export const addFormationAction = (formation, teacherId) => {
+  fetch("http://localhost:8000/formations/add", {
+    method: "POST",
+    mode: "cors",
+    headers: new Headers({ "Content-Type": "application/json" }),
+    body: JSON.stringify({ name: formation, teacher: teacherId }),
+  });
+};

@@ -125,8 +125,9 @@ def login_user(user: User):
 
 
 @app.post('/users/add')
-def add_user(username: Form(...), password: Form()):
-    return {username, password}
+async def add_user(username: str = Form(...), password: str = Form(...), admin: bool = Form(...)):
+    db.insert_user(username, password, admin)
+    return {"isAdded": True}
 
 
 @app.post('/users/delete')

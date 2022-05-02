@@ -155,3 +155,4 @@ launch.json
 .vscode
 server/db_id.json
 
+.gitignore

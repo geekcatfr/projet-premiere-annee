@@ -1,3 +1,4 @@
+import propTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchFormation } from "../../utils/data";
@@ -7,12 +8,11 @@ export default function Formation() {
   const params = useParams();
   const [formation, setFormation] = useState([]);
 
-  useEffect(async () => {
-    const f = await fetchFormation(parseInt(params.formationId, 10));
-    setFormation(f);
+  useEffect(() => {
+     fetchFormation(parseInt(params.formationId, 10)).then((formation) => setFormation(formation));
+    
   }, []);
 
-  console.log(formation);
   return (
     <div>
       <h1>{formation.title}</h1>
@@ -31,7 +31,7 @@ export default function Formation() {
 
 function FormationRating(props) {
   const { rating, nbrPeopleRating } = props;
-  console.log(rating);
+
   return (
     <>
       <div className="rating-form">
@@ -39,8 +39,12 @@ function FormationRating(props) {
         <input type="submit" />
       </div>
       <p>
-        /5 (Note moyenne de {rating} étoiles avec {nbrPeopleRating} votants)
+        (Note moyenne de {rating} étoiles avec {nbrPeopleRating} votants)
       </p>
     </>
   );
 }
+FormationRating.PropsType = {
+  rating: propTypes.string,
+  nbrPeopleRating: propTypes.string,
+};

@@ -1,14 +1,14 @@
 import { React, useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-
 import { fetchFormation, fetchTeachers } from "../../../utils/data";
 import "./edit.css";
 
-export default function EditPage(props) {
+export default function EditPage() {
   const params = useParams();
   const [content, setContent] = useState([]);
   const [teachers, setTeachers] = useState([]);
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     fetchFormation(parseInt(params.id, 10)).then((res) => setContent(res));
@@ -16,7 +16,18 @@ export default function EditPage(props) {
       (res) => setTeachers(res.teachers),
       (error) => setError(error)
     );
-  });
+    setIsLoading(false)
+  }, []);
+  if (isLoading) {
+    return (
+      <p>Récupération des données...</p>
+    )
+  }
+  if (error) {
+    return (
+      <p>Les données n'ont pas pu être chargées.</p>
+    )
+  }
   return (
     <div>
       <h1>Editer</h1>

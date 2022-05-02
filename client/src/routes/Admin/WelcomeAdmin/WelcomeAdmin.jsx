@@ -31,5 +31,6 @@ export default function WelcomeAdmin() {
 }
 
 function Button(props) {
-  return <div className="admin-button">{props.buttonText}</div>;
+  const {buttonText} = props;
+  return <div className="admin-button">{buttonText}</div>;
 }
