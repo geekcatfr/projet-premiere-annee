@@ -28,11 +28,11 @@ export default function Login() {
             localStorage.setItem("token", result.token);
             setisTokenSet(true);
           } else {
-            setError(true);
+            setError("Impossible to get token.");
           }
         },
-        (error) => {
-          setError(true);
+        (err) => {
+          setError(err);
         }
       );
   };
@@ -47,9 +47,9 @@ export default function Login() {
         <div className="login">
           <img className="login-logo" src={Logo} alt="Logo NDLP" />
           <h1>Connexion</h1>
-          <form>
-            <div className="form-content">
-              <label htmlFor="username">Nom d&apos;utilisateur :</label>
+          <div className="form-content">
+            <label htmlFor="username">
+              Nom d&apos;utilisateur :
               <input
                 type="text"
                 name="username"
@@ -57,7 +57,9 @@ export default function Login() {
                 onChange={(e) => setUsername(e.target.value)}
                 required
               />
-              <label htmlFor="password">Mot de passe :</label>
+            </label>
+            <label htmlFor="password">
+              Mot de passe :
               <input
                 type="password"
                 name="password"
@@ -65,11 +67,11 @@ export default function Login() {
                 id="password"
                 required
               />
-              <button onClick={sendFormData} type="button">
-                Connexion
-              </button>
-            </div>
-          </form>
+            </label>
+            <button onClick={sendFormData} type="button">
+              Connexion
+            </button>
+          </div>
         </div>
       </div>
     );
