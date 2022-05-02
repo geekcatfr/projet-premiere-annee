@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "./FormationPage.css";
+import { sendNewTeacherReq } from "../../../utils/data";
 
 library.add(fas);
 
@@ -11,6 +12,21 @@ export default function FormationPage() {
   const [formations, setFormations] = useState([]);
   const [error, setError] = useState(null);
   const [teachers, setTeachers] = useState([]);
+  const [isTeacherBoxToggled, setIsTeacherBoxToggled] = useState(false);
+
+  const toggleTeacherBox = () => {
+    setIsTeacherBoxToggled(!isTeacherBoxToggled);
+  };
+
+  const addFormationAction = () => {
+    const formationName = prompt("Entrez le nom d'une formation");
+    fetch("http://localhost:8000/formations/add", {
+      method: "POST",
+      mode: "cors",
+      headers: new Headers({ "Content-Type": "application/json" }),
+      body: JSON.stringify({ name: formationName, teacher: 1 }),
+    });
+  };
 
   useEffect(() => {
     fetch("http://localhost:8000/teachers")
@@ -42,54 +58,58 @@ export default function FormationPage() {
       {teachers.length === 0
         ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
         : "Vous pouvez ajouter des formations"}
-      <AddFormationButton />
-      <AddTeacherButton />
+      <button
+        onClick={addFormationAction}
+        className="add_formation_button"
+        type="button"
+      >
+        <FontAwesomeIcon icon="fa-solid fa-plus" />
+        <span>Ajouter une formation</span>
+      </button>
+      <button
+        onClick={toggleTeacherBox}
+        className="add_formation_button"
+        type="button"
+      >
+        <FontAwesomeIcon icon="fa-solid fa-user-pen" />
+        <span>Ajouter un professeur</span>
+      </button>
+      {isTeacherBoxToggled ? <AddTeacherBox /> : null}
       <FormationTable formations={formations} />
     </div>
   );
 }
 
-function AddFormationButton() {
-  const addFormationAction = () => {
-    const formationName = prompt("Entrez le nom d'une formation");
-    fetch("http://localhost:8000/formations/add", {
-      method: "POST",
-      mode: "cors",
-      headers: new Headers({ "Content-Type": "application/json" }),
-      body: JSON.stringify({ name: formationName, teacher: 1 }),
-    });
-  };
-  return (
-    <button
-      onClick={addFormationAction}
-      className="add_formation_button"
-      type="button"
-    >
-      <FontAwesomeIcon icon="fa-solid fa-plus" />
-      <span>Ajouter une formation</span>
-    </button>
-  );
-}
-
 function AddTeacherBox() {
+  const [firstName, setFirstName] = useState(null);
+  const [lastName, setLastName] = useState(null);
+
+  const handleRequest = () => {
+    sendNewTeacherReq(firstName, lastName);
+  };
+
   // TODO
   return (
     <div>
       <h2>Nouveau professeur</h2>
-      <label htmlFor="firstName">Prénom</label>
-      <input class="text" id="firstName"/>
-      <label htmlFor="lastName">Nom</label>
-      <input class="text" id="lastName"/>
+      <form onSubmit={handleRequest}>
+        <label htmlFor="firstName">Prénom</label>
+        <input
+          onChange={(e) => setFirstName(e.target.value)}
+          type="text"
+          id="firstName"
+          name="firstName"
+        />
+        <label htmlFor="lastName">Nom</label>
+        <input
+          onChange={(e) => setLastName(e.target.value)}
+          type="text"
+          id="lastName"
+          name="lastName"
+        />
+        <input type="submit" value="Envoyer" />
+      </form>
     </div>
-  );
-}
-
-function AddTeacherButton() {
-  return (
-    <button className="add_formation_button" type="button">
-      <FontAwesomeIcon icon="fa-solid fa-user-pen" />
-      <span>Ajouter un professeur</span>
-    </button>
   );
 }
 

@@ -15,3 +15,13 @@ export async function fetchFormation(formationId) {
   const formation = await req.json();
   return formation;
 }
+
+export async function sendNewTeacherReq(firstName, lastName) {
+  const headers = new Headers({ "Content-Type": "application/json" });
+
+  const req = await fetch("http://localhost:8000/teachers/add", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ first_name: firstName, last_name: lastName }),
+  });
+}
