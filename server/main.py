@@ -68,7 +68,6 @@ def formation_content(formation_id: int):
 @app.post("/formations/add")
 def add_formation(formation: Formation):
     db.insert_formation(formation)
-    print(formation.content)
     return {True}
 
 
@@ -89,7 +88,7 @@ def update_note(formation: int, note: int):
 
 @app.get("/formations/delete/{formation_id}")
 def delete_formation(formation_id: int):
-    db.delete_row(formation_id)
+    db.delete_formation(formation_id)
     return {"isDeleted": True}
 
 
@@ -125,8 +124,8 @@ def login_user(user: User):
 
 
 @app.post('/users/add')
-async def add_user(username: str = Form(...), password: str = Form(...), admin: bool = Form(...)):
-    db.insert_user(username, password, admin)
+async def add_user(user: User, isAdmin: bool):
+    db.insert_user(user.username, user.password, isAdmin)
     return {"isAdded": True}
 
 
