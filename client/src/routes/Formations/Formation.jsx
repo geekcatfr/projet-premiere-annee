@@ -1,5 +1,5 @@
-import propTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchFormation } from "../../utils/data";
 import "./Formations.css";
@@ -9,8 +9,9 @@ export default function Formation() {
   const [formation, setFormation] = useState([]);
 
   useEffect(() => {
-     fetchFormation(parseInt(params.formationId, 10)).then((formation) => setFormation(formation));
-    
+    fetchFormation(parseInt(params.formationId, 10)).then((f) =>
+      setFormation(f)
+    );
   }, []);
 
   return (
@@ -31,7 +32,6 @@ export default function Formation() {
 
 function FormationRating(props) {
   const { rating, nbrPeopleRating } = props;
-
   return (
     <>
       <div className="rating-form">
@@ -44,7 +44,7 @@ function FormationRating(props) {
     </>
   );
 }
-FormationRating.PropsType = {
-  rating: propTypes.string,
-  nbrPeopleRating: propTypes.string,
+FormationRating.propsType = {
+  rating: PropTypes.string.isRequired,
+  nbrPeopleRating: PropTypes.string.isRequired,
 };

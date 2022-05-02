@@ -1,12 +1,12 @@
+/* eslint-disable react/forbid-prop-types */
 import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import "./FormationPage.css";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { sendNewTeacherReq, addFormationAction } from "../../../utils/data";
-
 
 library.add(fas);
 
@@ -15,15 +15,15 @@ export default function FormationPage() {
   const [error, setError] = useState(null);
   const [teachers, setTeachers] = useState([]);
   const [isTeacherBoxToggled, setIsTeacherBoxToggled] = useState(false);
-  const [isFormationBoxToggled, setIsFormationBoxToggled] = useState(false)
+  const [isFormationBoxToggled, setIsFormationBoxToggled] = useState(false);
 
   const toggleTeacherBox = () => {
     setIsTeacherBoxToggled(!isTeacherBoxToggled);
   };
 
   const toggleFormationBox = () => {
-    setIsFormationBoxToggled(!isFormationBoxToggled)
-  }
+    setIsFormationBoxToggled(!isFormationBoxToggled);
+  };
 
   useEffect(() => {
     fetch("http://localhost:8000/teachers")
@@ -52,28 +52,36 @@ export default function FormationPage() {
   return (
     <div>
       <h1>Formations</h1>
-      {teachers.length === 0
-        ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
-        : "Vous pouvez ajouter des formations"}
-      <button
-        onClick={toggleFormationBox}
-        className="add_formation_button"
-        type="button"
-      >
-        <FontAwesomeIcon icon="fa-solid fa-plus" />
-        <span>Ajouter une formation</span>
-      </button>
-      <button
-        onClick={toggleTeacherBox}
-        className="add_formation_button"
-        type="button"
-      >
-        <FontAwesomeIcon icon="fa-solid fa-user-pen" />
-        <span>Ajouter un professeur</span>
-      </button>
-      {isFormationBoxToggled ? <AddFormationBox teachers={teachers}/> : null}
+
+      <p>
+        {teachers.length === 0
+          ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
+          : "Vous pouvez ajouter des formations"}
+      </p>
+      <div className="actions-buttons-container">
+        <button
+          onClick={toggleFormationBox}
+          className="add_formation_button"
+          type="button"
+        >
+          <FontAwesomeIcon icon="fa-solid fa-plus" />
+          <span>Ajouter une formation</span>
+        </button>
+        <button
+          onClick={toggleTeacherBox}
+          className="add_formation_button"
+          type="button"
+        >
+          <FontAwesomeIcon icon="fa-solid fa-user-pen" />
+          <span>Ajouter un professeur</span>
+        </button>
+      </div>
+      {isFormationBoxToggled ? <AddFormationBox teachers={teachers} /> : null}
       {isTeacherBoxToggled ? <AddTeacherBox /> : null}
       <FormationTable formations={formations} />
+      <p>
+        Vous souhaitez <Link to="/admin/teachers">gérer les professeurs ?</Link>
+      </p>
     </div>
   );
 }
@@ -90,49 +98,75 @@ function AddTeacherBox() {
   return (
     <div>
       <h2>Nouveau professeur</h2>
-      <form onSubmit={handleRequest}>
-        <label htmlFor="firstName">Prénom</label>
-        <input
-          onChange={(e) => setFirstName(e.target.value)}
-          type="text"
-          id="firstName"
-          name="firstName"
-        />
-        <label htmlFor="lastName">Nom</label>
-        <input
-          onChange={(e) => setLastName(e.target.value)}
-          type="text"
-          id="lastName"
-          name="lastName"
-        />
-        <input type="submit" value="Envoyer" />
-      </form>
+      <div className="formContainer">
+        <label htmlFor="firstName">
+          Prénom
+          <input
+            onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            id="firstName"
+            name="firstName"
+          />
+        </label>
+        <label htmlFor="lastName">
+          Nom
+          <input
+            onChange={(e) => setLastName(e.target.value)}
+            type="text"
+            id="lastName"
+            name="lastName"
+          />
+        </label>
+        <button onClick={handleRequest} type="button">
+          Envoyer
+        </button>
+      </div>
     </div>
   );
 }
 
-function AddFormationBox({teachers}) {
-  const [formationName, setFormationName] = useState(null)
-  const [teacherId, setTeacherId] = useState(null)
+function AddFormationBox({ teachers }) {
+  const [formationName, setFormationName] = useState(null);
+  const [teacherId, setTeacherId] = useState(0);
 
   const handleRequest = () => {
-    addFormationAction(formationName, teacherId)
-  }
+    console.log(teacherId);
+    addFormationAction(formationName, teacherId);
+  };
   return (
     <>
       <h2>Ajouter une nouvelle formation</h2>
-      <form onSubmit={handleRequest}>
-        <label id="teacherName">Nom du professeur</label>
-        <input type="text" id="teacherName" name="teacherName"/>
-        <select>
-        {teachers.map((teacher) => (
-          <option key={teacher.id}>{teacher.firstName} {teacher.lastName}</option>
-        ))}
+      <p className="alert">
+        Pensez à ajouter un professeur avant d'ajouter une formation !
+      </p>
+      <div onSubmit={handleRequest}>
+        <label id="formationName">
+          Nom de la formation
+          <input
+            onChange={(e) => setFormationName(e.target.value)}
+            type="text"
+            id="formationName"
+            name="formationName"
+          />
+        </label>
+        <select onChange={(e) => setTeacherId(e.target.value)}>
+          {teachers.map((teacher) => (
+            <option key={teacher.id} value={teacher.id}>
+              {teacher.firstName} {teacher.lastName}
+            </option>
+          ))}
         </select>
-      </form>
+        <button type="button" onClick={handleRequest}>
+          Ajouter
+        </button>
+      </div>
     </>
-  )
+  );
 }
+
+AddFormationBox.propTypes = {
+  teachers: PropTypes.object.isRequired,
+};
 
 function FormationTable(props) {
   const { formations } = props;
@@ -159,8 +193,8 @@ function FormationTable(props) {
   );
 }
 FormationTable.propTypes = {
-  formations: PropTypes.array.isRequired
-}
+  formations: PropTypes.array.isRequired,
+};
 
 function FormationRow(props) {
   const [selected, setIsSelected] = useState(false);
@@ -193,4 +227,7 @@ function FormationRow(props) {
     </tr>
   );
 }
-FormationRow.propTypes = {formationId: PropTypes.number.isRequired, title: PropTypes.string.isRequired}
+FormationRow.propTypes = {
+  formationId: PropTypes.number.isRequired,
+  title: PropTypes.string.isRequired,
+};

@@ -1,4 +1,5 @@
 import { React, useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { fetchFormation, fetchTeachers } from "../../../utils/data";
 import "./edit.css";
@@ -8,25 +9,21 @@ export default function EditPage() {
   const [content, setContent] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchFormation(parseInt(params.id, 10)).then((res) => setContent(res));
     fetchTeachers().then(
       (res) => setTeachers(res.teachers),
-      (error) => setError(error)
+      (err) => setError(err)
     );
-    setIsLoading(false)
+    setIsLoading(false);
   }, []);
   if (isLoading) {
-    return (
-      <p>Récupération des données...</p>
-    )
+    return <p>Récupération des données...</p>;
   }
   if (error) {
-    return (
-      <p>Les données n'ont pas pu être chargées.</p>
-    )
+    return <p>Les données n&apos;ont pas pu être chargées.</p>;
   }
   return (
     <div>
@@ -65,3 +62,9 @@ function TextArea(props) {
     />
   );
 }
+TextArea.propTypes = {
+  content: PropTypes.string,
+};
+TextArea.defaultProps = {
+  content: "",
+};
