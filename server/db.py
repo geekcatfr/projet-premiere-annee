@@ -133,18 +133,14 @@ class DatabaseConnection():
                     conn.database = self.name
         conn.disconnect()
 
-    def insert_user(self, user: str, password: str, isAdmin: bool):
+    def fetch_all(self):
         conn = self.connect()
-        if isAdmin >=0 and isAdmin <= 1:
-            with conn.cursor() as db_cursor:
-                add_user = ("INSERT INTO users "
-                            "(username, password, is_admin) "
-                            f"VALUES (\"{toSHA(user)}\", \"{toSHA(password)}\", {isAdmin})")
+        with conn.cursor() as cursor:
+            cursor.fetchall()
+        pass
 
-                db_cursor.execute(add_user)
-                conn.commit()
-
-        conn.disconnect()
+    def export(self):
+        pass
 
     def insert_formation(self, data):
         conn = self.connect()
@@ -157,7 +153,7 @@ class DatabaseConnection():
 
         conn.disconnect()
 
-    def delete_row(self, formation_id: int) -> None:
+    def delete_formation(self, formation_id: int) -> None:
         delete_user = ("DELETE FROM `formations` "
                        f"where `formation_id` = {formation_id}")
         conn = self.connect()
@@ -182,7 +178,7 @@ class DatabaseConnection():
 
         conn.disconnect()
 
-    def check_user(self, username, password):
+    def check_user(self, username: str, password: str):
         select_user = (
             f"SELECT username, password FROM users WHERE username = \"{toSHA(username)}\"")
         conn = self.connect()
@@ -211,10 +207,16 @@ class DatabaseConnection():
                     {"username": username, "admin": bool(isAdmin)})
         return users_list
 
-        with conn.cursor(buffered=True) as db_cursor:
-            db_cursor.execute(get_id_request)
-            for id in db_cursor:
-                return {"id": id, "username": username}
+    def insert_user(self, user: str, password: str, isAdmin: bool):
+        conn = self.connect()
+        if isAdmin >= 0 and isAdmin <= 1:
+            with conn.cursor() as db_cursor:
+                add_user = ("INSERT INTO users "
+                            "(username, password, is_admin) "
+                            f"VALUES (\"{toSHA(user)}\", \"{toSHA(password)}\", {isAdmin})")
+
+                db_cursor.execute(add_user)
+                conn.commit()
 
         conn.disconnect()
 
@@ -251,35 +253,19 @@ class DatabaseConnection():
             except UnboundLocalError:
                 return {"error": "this formation does not exist"}
 
-    def get_teachers(self):
-        teachers = []
-        get_teacher_req = (f"SELECT teacher_id, first_name, last_name FROM teachers")
-        conn = self.connect()
-        with conn.cursor(buffered=True) as db_cursor:
-            db_cursor.execute(get_teacher_req)
-
-            for id, firstName, lastName in db_cursor:
-                teachers.append({"id": id, "firstName": firstName, "lastName": lastName})
-
-        conn.disconnect()
-        return teachers
-
     def update_note(self, formation_id, new_note):
+        conn = self.connect()
         get_notes_req = (
             f"SELECT grade, number_of_ratings FROM formations WHERE formation_id = {formation_id}")
-
+        noteList = []
+        with conn.cursor() as cursor:
+            conn.execute(get_notes_req)
+            for grade, nbrRatings in conn:
+                noteList.append(grade, nbrRatings)
+            print(noteList)
+        conn.disconnect()
         update_note_req = ("UPDATE `formations`"
                            "SET ")
-
-    def add_teacher(self, data):
-        add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
-                           f"VALUES (\"{data.first_name}\", \"{data.last_name}\")")
-        conn = self.connect()
-        with conn.cursor(buffered=True) as db_cursor:
-            db_cursor.execute(f"USE {self.name}")
-            db_cursor.execute(add_teacher_req)
-        conn.commit()
-        conn.disconnect()
 
     def get_token(self, user):
         conn = self.connect()
@@ -300,6 +286,31 @@ class DatabaseConnection():
         conn.disconnect()
 
         return {"token": token}
+
+    def add_teacher(self, data):
+        add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
+                           f"VALUES (\"{data.first_name}\", \"{data.last_name}\")")
+        conn = self.connect()
+        with conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(f"USE {self.name}")
+            db_cursor.execute(add_teacher_req)
+        conn.commit()
+        conn.disconnect()
+
+    def get_teachers(self):
+        teachers = []
+        get_teacher_req = (
+            f"SELECT teacher_id, first_name, last_name FROM teachers")
+        conn = self.connect()
+        with conn.cursor(buffered=True) as db_cursor:
+            db_cursor.execute(get_teacher_req)
+
+            for id, firstName, lastName in db_cursor:
+                teachers.append(
+                    {"id": id, "firstName": firstName, "lastName": lastName})
+
+        conn.disconnect()
+        return teachers
 
 
 def init_rows(db_conn, db_name):
