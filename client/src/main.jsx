@@ -17,6 +17,7 @@ import EditPage from "./routes/Admin/EditPage/EditPage";
 import App from "./App";
 import Formation from "./routes/Formations/Formation";
 import SettingsPage from "./routes/Admin/Settings/SettingsPage";
+import TeacherPage from "./routes/Admin/TeacherPage/TeacherPage";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -31,11 +32,12 @@ ReactDOM.render(
           <Route path="admin" element={<WelcomeAdmin />} />
           <Route path="admin/formations" element={<FormationPage />} />
           <Route path="admin/formations/edit/:id" element={<EditPage />} />
-          <Route path="admin/settings" element={<SettingsPage/>}/>
+          <Route path="admin/teachers" element={<TeacherPage />} />
+          <Route path="admin/settings" element={<SettingsPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("root")
+  document.getElementById("fcpro-root")
 );
