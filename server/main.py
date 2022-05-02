@@ -1,9 +1,9 @@
+from ast import For
 import sys
 from typing import Optional
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-import json
+from pydantic import BaseModel
 
 from db import DatabaseConnection, writeInLog
 
@@ -51,7 +51,7 @@ if (db.isConnected == False):
 
 @app.get("/")
 def read_root():
-    return {"Hello", "world"}
+    return {"message": "the API is correctly working."}
 
 
 @app.get("/formations")
@@ -77,6 +77,7 @@ def edit_formation(formation: Formation, formation_id: int):
     db.update_formation(formation, formation_id)
     return {"isEdited": True}
 
+
 @app.post("/formation/update_note")
 def update_note(formation: int, note: int):
     if note >= 0 and note <= 5:
@@ -89,7 +90,6 @@ def update_note(formation: int, note: int):
 @app.get("/formations/delete/{formation_id}")
 def delete_formation(formation_id: int):
     db.delete_row(formation_id)
-
     return {"isDeleted": True}
 
 
@@ -101,13 +101,34 @@ def get_teachers():
 @app.post("/teachers/add")
 def add_teacher(teacher: Teacher):
     db.add_teacher(teacher)
+    return {"isAdded": True, "name": f"{teacher.first_name} {teacher.last_name}"}
+
+
+@app.post("/teachers/delete")
+def delete_user(teacher: Teacher):
+    pass
+
+
+@app.get("/users")
+def get_users():
+    return db.get_user_list()
 
 
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.check_user(user.username, user.password)
     #token = db.get_token(user.username)
-    if req is not None:
+    if req:
         return {"token": "aaa"}
     else:
         return {"error": "incorrect user login or password."}
+
+
+@app.post('/users/add')
+def add_user(username: Form(...), password: Form()):
+    return {username, password}
+
+
+@app.post('/users/delete')
+def delete_user(user: User):
+    pass

@@ -4,9 +4,10 @@ from mysql.connector import errorcode
 
 import json
 import time
+import hashlib
 
 
-def loadCredentials(id_file):
+def loadCredentials(id_file: str):
     """id_file should be a string
     containing the name of the file with credentials in it. """
     with open(id_file) as f:
@@ -15,7 +16,7 @@ def loadCredentials(id_file):
         return content, {"user": token['user'], "password": token['password'], "host": token['host']}
 
 
-def create_database(db_name, db_conn):
+def create_database(db_name: str, db_conn: str):
     try:
         db_conn.execute(f"CREATE DATABASE {db_name} CHARACTER SET 'utf8'")
         return True
@@ -30,7 +31,13 @@ def update_database() -> None:
     pass
 
 
-def writeInLog(error):
+def toSHA(val: str):
+    hashedValue = hashlib.sha256()
+    hashedValue.update(val.encode())
+    return hashedValue.hexdigest()
+
+
+def writeInLog(error: str):
     """Takes an error in str format as argument, writes in db.log the error with formatted time."""
     log_file = "db.log"
     error = str(error)
@@ -86,27 +93,6 @@ def get_tables():
     return tables
 
 
-def init_rows(db_conn, db_name):
-    """Init a dict of tables,
-    the key is the name of the table
-    write the SQL request as a value, and write them in db_conn"""
-    db_conn.database = db_name
-    db_cursor = db_conn.cursor()
-    tables = get_tables()
-
-    for table, request in tables.items():
-        try:
-            print(f"Creating {table}...")
-            db_cursor.execute(request)
-        except mysql.connector.Error as error:
-            if error == errorcode.ER_TABLE_EXISTS_ERROR:
-                print(f"{table} exists.")
-                writeInLog(f"{table} already exists. {error}")
-            else:
-                print(error)
-                writeInLog(error)
-
-
 class DatabaseConnection():
 
     def __init__(self):
@@ -147,18 +133,15 @@ class DatabaseConnection():
                     conn.database = self.name
         conn.disconnect()
 
-    def insert_row(self, type, **data):
+    def insert_user(self, user, password):
         conn = self.connect()
 
         with conn.cursor() as db_cursor:
             add_user = ("INSERT INTO users "
                         "(username, password) "
-                        "VALUES (\"{}\", \"{}\")")
+                        f"VALUES (\"{toSHA(user)}\", \"{toSHA(password)}\")")
 
-            if type == 'user':
-                add_user = add_user.format(data['username'], data['password'])
-                db_cursor.execute(add_user)
-
+            db_cursor.execute(add_user)
             conn.commit()
 
         conn.disconnect()
@@ -201,7 +184,7 @@ class DatabaseConnection():
 
     def check_user(self, username, password):
         select_user = (
-            f"SELECT username, password FROM users WHERE username = \"{username}\"")
+            f"SELECT username, password FROM users WHERE username = \"{toSHA(username)}\"")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
 
@@ -209,17 +192,24 @@ class DatabaseConnection():
             db_cursor.execute(select_user)
 
             for user, db_pass in db_cursor:
-                if username == user and db_pass == password:
-                    return {"username": username, "password": password}
+                if toSHA(username) == user and db_pass == toSHA(password):
+                    return True
                 else:
-                    return None
+                    return False
 
         conn.disconnect()
 
-    def get_user_infos(self, username):
+    def get_user_list(self):
         get_id_request = (
-            f"SELECT user_id FROM users WHERE username = \"{username}\"")
+            f"SELECT username, is_admin FROM users")
+        users_list = []
         conn = self.connect()
+        with conn.cursor(buffered=True) as cursor:
+            cursor.execute(get_id_request)
+            for username, isAdmin in cursor:
+                users_list.append(
+                    {"username": username, "admin": bool(isAdmin)})
+        return users_list
 
         with conn.cursor(buffered=True) as db_cursor:
             db_cursor.execute(get_id_request)
@@ -275,12 +265,11 @@ class DatabaseConnection():
         return teachers
 
     def update_note(self, formation_id, new_note):
-        get_notes_req = (f"SELECT grade, number_of_ratings FROM formations WHERE formation_id = {formation_id}")
+        get_notes_req = (
+            f"SELECT grade, number_of_ratings FROM formations WHERE formation_id = {formation_id}")
 
-        
         update_note_req = ("UPDATE `formations`"
                            "SET ")
-        
 
     def add_teacher(self, data):
         add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
@@ -311,3 +300,25 @@ class DatabaseConnection():
         conn.disconnect()
 
         return {"token": token}
+
+
+def init_rows(db_conn, db_name):
+    """Init a dict of tables,
+    the key is the name of the table
+    write the SQL request as a value, and write them in db_conn"""
+    db_conn.database = db_name
+    db_cursor = db_conn.cursor()
+    tables = get_tables()
+
+    for table, request in tables.items():
+        try:
+            print(f"Creating {table}...")
+            db_cursor.execute(request)
+
+        except mysql.connector.Error as error:
+            if error == errorcode.ER_TABLE_EXISTS_ERROR:
+                print(f"{table} exists.")
+                writeInLog(f"{table} already exists. {error}")
+            else:
+                print(error)
+                writeInLog(error)
