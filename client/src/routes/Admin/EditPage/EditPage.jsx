@@ -1,5 +1,4 @@
 import { React, useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { fetchFormation, fetchTeachers } from "../../../utils/data";
 import "./edit.css";
@@ -14,11 +13,21 @@ export default function EditPage() {
   useEffect(() => {
     fetchFormation(parseInt(params.id, 10)).then((res) => setContent(res));
     fetchTeachers().then(
-      (res) => setTeachers(res.teachers),
+      (res) => setTeachers(res),
       (err) => setError(err)
     );
     setIsLoading(false);
   }, []);
+
+  const handleSubmit = () => {
+    const headers = new Headers({ "Content-Type": "application/json" });
+    fetch("http://localhost:8000/formations/edit", {
+      method: "POST",
+      headers,
+      body: JSON.stringify(),
+    });
+  };
+
   if (isLoading) {
     return <p>Récupération des données...</p>;
   }
@@ -30,11 +39,23 @@ export default function EditPage() {
       <h1>Editer</h1>
       <div className="title-wrapper">
         <p>Titre du contenu</p>
-        <TextArea content={content.title} />
+
+        <input
+          type="text"
+          id="content"
+          placeholder="Entrez du contenu..."
+          value={content.title}
+        />
       </div>
       <div>
         <p>Contenu</p>
-        <TextArea content={content.content} />
+
+        <input
+          type="text"
+          id="content"
+          placeholder="Entrez du contenu..."
+          value={content.content}
+        />
       </div>
       <div>
         <p>Formateur</p>
@@ -46,25 +67,7 @@ export default function EditPage() {
           ))}
         </select>
       </div>
-      <input type="submit" />
+      <input onClick={handleSubmit} type="submit" />
     </div>
   );
 }
-
-function TextArea(props) {
-  const { content } = props;
-  return (
-    <input
-      type="text"
-      id="content"
-      placeholder="Entrez du contenu..."
-      value={content}
-    />
-  );
-}
-TextArea.propTypes = {
-  content: PropTypes.string,
-};
-TextArea.defaultProps = {
-  content: "",
-};
