@@ -18,6 +18,7 @@ import App from "./App";
 import Formation from "./routes/Formations/Formation";
 import SettingsPage from "./routes/Admin/Settings/SettingsPage";
 import TeacherPage from "./routes/Admin/TeacherPage/TeacherPage";
+import ManageUsers from "./routes/Admin/Settings/ManageUsers";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -34,6 +35,7 @@ ReactDOM.render(
           <Route path="admin/formations/edit/:id" element={<EditPage />} />
           <Route path="admin/teachers" element={<TeacherPage />} />
           <Route path="admin/settings" element={<SettingsPage />} />
+          <Route path="admin/users" element={<ManageUsers />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
