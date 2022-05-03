@@ -67,8 +67,11 @@ def formation_content(formation_id: int):
 
 @app.post("/formations/add")
 def add_formation(formation: Formation):
-    db.insert_formation(formation)
-    return {True}
+    if formation.teacher > 0:
+        db.insert_formation(formation)
+        return {"added": True}
+    else: 
+        return {"error": "invalid id passed"}
 
 
 @app.post("/formations/edit")
@@ -95,6 +98,10 @@ def delete_formation(formation_id: int):
 @app.get("/teachers")
 def get_teachers():
     return db.get_teachers()
+
+@app.get("/teachers/{teacherId}")
+def get_teacher(teacherId: int):
+    return db.get_teacher(teacherId)
 
 
 @app.post("/teachers/add")

@@ -5,6 +5,11 @@ export function checkLoginTokenStorage() {
   return true;
 }
 
+export const getUsers = () => {
+  const req = fetch("http://localhost:8000/users").then((res) => res.json());
+  return req;
+};
+
 export const addNewUser = (username, password, isAdmin) => {
   const headers = new Headers({ "Content-Type": "application/json" });
   fetch("http://localhost:8000/users/add", {

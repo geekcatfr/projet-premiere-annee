@@ -1,14 +1,15 @@
 import { React, useState } from "react";
+import { Link } from "react-router-dom";
 import { addNewUser } from "../../../utils/login";
 
 export default function SettingsPage() {
   return (
-    <>
+    <div>
       <h1>Paramètres</h1>
       <AddUser />
       <ManageUsers />
       <SetBackup />
-    </>
+    </div>
   );
 }
 
@@ -58,7 +59,12 @@ function AddUser() {
 }
 
 function ManageUsers() {
-  return <h2>Gérer les utilisateurs</h2>;
+  return (
+    <div className="manageUserContainer">
+      <h2>Gérer les utilisateurs</h2>
+      <Link to="/admin/users">Accéder</Link>
+    </div>
+  );
 }
 
 function SetBackup() {

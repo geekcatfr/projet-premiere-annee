@@ -188,7 +188,7 @@ class DatabaseConnection():
             db_cursor.execute(select_user)
 
             for user, db_pass in db_cursor:
-                if toSHA(username) == user and db_pass == toSHA(password):
+                if username == user and db_pass == toSHA(password):
                     return True
                 else:
                     return False
@@ -213,7 +213,7 @@ class DatabaseConnection():
             with conn.cursor() as db_cursor:
                 add_user = ("INSERT INTO users "
                             "(username, password, is_admin) "
-                            f"VALUES (\"{toSHA(user)}\", \"{toSHA(password)}\", {isAdmin})")
+                            f"VALUES (\"{user}\", \"{toSHA(password)}\", {isAdmin})")
 
                 db_cursor.execute(add_user)
                 conn.commit()
@@ -312,6 +312,19 @@ class DatabaseConnection():
         conn.disconnect()
         return teachers
 
+    def get_teacher(self, teacherId: int):
+        get_teacher = f"SELECT first_name, last_name FROM teachers where teacher_id = {teacherId}"
+        conn = self.connect()
+        teacher = {}
+        with conn.cursor() as cursor:
+            cursor.execute(get_teacher)
+
+            for firstName, lastName in cursor:
+                teacher['firstName'] = firstName
+                teacher['lastName'] = lastName
+        conn.commit()
+        conn.disconnect()
+        return teacher
 
 def init_rows(db_conn, db_name):
     """Init a dict of tables,

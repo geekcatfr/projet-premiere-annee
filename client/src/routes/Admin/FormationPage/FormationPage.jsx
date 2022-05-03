@@ -92,6 +92,7 @@ function AddTeacherBox() {
 
   const handleRequest = () => {
     sendNewTeacherReq(firstName, lastName);
+    window.location.reload();
   };
 
   // TODO
@@ -127,17 +128,16 @@ function AddTeacherBox() {
 
 function AddFormationBox({ teachers }) {
   const [formationName, setFormationName] = useState(null);
-  const [teacherId, setTeacherId] = useState(0);
+  const [teacherId, setTeacherId] = useState(1);
 
   const handleRequest = () => {
-    console.log(teacherId);
     addFormationAction(formationName, teacherId);
   };
   return (
     <>
       <h2>Ajouter une nouvelle formation</h2>
       <p className="alert">
-        Pensez à ajouter un professeur avant d'ajouter une formation !
+        Pensez à ajouter un professeur avant d&apos;ajouter une formation !
       </p>
       <div onSubmit={handleRequest}>
         <label id="formationName">
@@ -149,7 +149,11 @@ function AddFormationBox({ teachers }) {
             name="formationName"
           />
         </label>
-        <select onChange={(e) => setTeacherId(e.target.value)}>
+        <select
+          onChange={(e) => {
+            setTeacherId(e.target.value);
+          }}
+        >
           {teachers.map((teacher) => (
             <option key={teacher.id} value={teacher.id}>
               {teacher.firstName} {teacher.lastName}

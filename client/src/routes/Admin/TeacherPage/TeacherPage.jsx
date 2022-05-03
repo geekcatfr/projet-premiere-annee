@@ -12,6 +12,10 @@ export default function TeacherPage() {
   return (
     <div>
       <h1>Liste d'enseignants</h1>
+      <select>
+        <option>Sélectionner...</option>
+        <option>Supprimer</option>
+      </select>
       <TeachersTable teachers={teachers} />
     </div>
   );
@@ -24,15 +28,18 @@ function TeachersTable({ teachers }) {
         <th>Sélectionner</th>
         <th>Nom</th>
         <th>Prénom</th>
+        <th>Actions</th>
       </thead>
       <tbody>
-        <tr>
-          {teachers.map((teacher) => (
-            <td key={teacher.id}>
-              {teacher.firstName} {teacher.lastName}
+        {teachers.map((teacher) => (
+          <tr key={teacher.id}>
+            <td>
+              <input type="checkbox" />
             </td>
-          ))}
-        </tr>
+            <td>{teacher.firstName}</td>
+            <td>{teacher.lastName}</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );
