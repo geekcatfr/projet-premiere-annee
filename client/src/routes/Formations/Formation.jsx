@@ -29,6 +29,7 @@ export default function Formation() {
       <p>
         Formateur : {teacher.firstName} {teacher.lastName}
       </p>
+      <h2>Description</h2>
       <p>
         {formation.content === "None"
           ? "Il n'y a aucun contenu dans cette section pour le moment."
@@ -61,3 +62,11 @@ FormationRating.propTypes = {
   rating: PropTypes.number.isRequired,
   nbrPeopleRating: PropTypes.number.isRequired,
 };
+
+function DatesCalendar() {
+  return (
+    <>
+    
+    </>
+  )
+}

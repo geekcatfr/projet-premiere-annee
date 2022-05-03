@@ -67,7 +67,7 @@ def formation_content(formation_id: int):
 
 @app.post("/formations/add")
 def add_formation(formation: Formation):
-    if formation.teacher > 0:
+    if int(formation.teacher) > 0:
         db.insert_formation(formation)
         return {"added": True}
     else: 
