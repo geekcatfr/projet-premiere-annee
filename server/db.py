@@ -170,7 +170,6 @@ class DatabaseConnection():
                           f"`content` = \"{new_formation.content}\", "
                           f"`teacher` = \"{new_formation.teacher}\" "
                           f"WHERE `formation_id` = {formation_id}")
-
         conn = self.connect()
         with conn.cursor() as db_cursor:
             db_cursor.execute(edit_formation)
