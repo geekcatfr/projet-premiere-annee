@@ -10,6 +10,12 @@ export async function fetchTeachers() {
   return teachers;
 }
 
+export const fetchTeacher = async (teacherId) => {
+  const res = await fetch(`http://localhost:8000/formations/${teacherId}`);
+  const teacher = res.json();
+  return teacher;
+};
+
 export async function fetchFormation(formationId) {
   const req = await fetch(`http://localhost:8000/formations/${formationId}`);
   const formation = await req.json();
