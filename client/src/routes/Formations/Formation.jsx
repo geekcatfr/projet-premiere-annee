@@ -1,6 +1,7 @@
 import PropTypes from "prop-types";
 import { React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 import { fetchFormation, fetchTeachers } from "../../utils/data";
 import "./Formations.css";
 
@@ -14,7 +15,7 @@ export default function Formation() {
     fetchFormation(parseInt(params.formationId, 10)).then((f) => {
       setFormation(f);
       const teacherId = f.teacher;
-      const teacherUrl = "http://localhost:8000/teachers/" + teacherId;
+      const teacherUrl = `http://localhost:8000/teachers/${teacherId}`;
       fetch(teacherUrl)
         .then((res) => res.json())
         .then((res) => {
@@ -22,19 +23,22 @@ export default function Formation() {
         });
     });
   }, []);
-  console.log(teacher);
   return (
     <div>
       <h1>{formation.title}</h1>
       <p>
         Formateur : {teacher.firstName} {teacher.lastName}
       </p>
-      <h2>Description</h2>
-      <p>
-        {formation.content === "None"
-          ? "Il n'y a aucun contenu dans cette section pour le moment."
-          : formation.content}
-      </p>
+      <div className="aboutFormationWrapper">
+        <h2>A propos</h2>
+        <p>
+          {formation.content === "None" ? (
+            "Il n'y a aucun contenu dans cette section pour le moment."
+          ) : (
+            <ReactMarkdown>{formation.content}</ReactMarkdown>
+          )}
+        </p>
+      </div>
       <FormationRating
         rating={formation.rating}
         nbrPeopleRating={formation.nbrPeopleRating}
@@ -64,9 +68,5 @@ FormationRating.propTypes = {
 };
 
 function DatesCalendar() {
-  return (
-    <>
-    
-    </>
-  )
+  return <></>;
 }
