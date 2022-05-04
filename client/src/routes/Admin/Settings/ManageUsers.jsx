@@ -37,6 +37,6 @@ function ManageUsersTable({ users }) {
     </table>
   );
 }
-ManageUsersTable.propType = {
+ManageUsersTable.propTypes = {
   users: PropTypes.array.isRequired,
 };
