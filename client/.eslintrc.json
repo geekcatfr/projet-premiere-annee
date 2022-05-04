@@ -17,6 +17,6 @@
       "sourceType": "module"
     },
     "plugins": ["react"],
-    "rules": {}
+    "rules": {"forbid-prop-types": "off"}
   }
 }
