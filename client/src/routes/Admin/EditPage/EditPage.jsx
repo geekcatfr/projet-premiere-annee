@@ -10,18 +10,18 @@ export default function EditPage() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  const formationId = parseInt(params.id, 10)
+  const formationId = parseInt(params.id, 10);
 
-  const [newName, setNewName] = useState("")
-  const [newContent, setNewContent] = useState("")
-  const [newTeacher, setNewTeacher] = useState(0)
+  const [newName, setNewName] = useState("");
+  const [newContent, setNewContent] = useState("");
+  const [newTeacher, setNewTeacher] = useState(0);
 
   useEffect(() => {
     fetchFormation(formationId).then((res) => {
-      setContent(res)
-      setNewName(res.title)
-      setNewContent(res.content)
-      setNewTeacher(res.teacher)
+      setContent(res);
+      setNewName(res.title);
+      setNewContent(res.content);
+      setNewTeacher(res.teacher);
     });
     fetchTeachers().then(
       (res) => setTeachers(res),
@@ -35,7 +35,11 @@ export default function EditPage() {
     fetch(`http://localhost:8000/formations/edit?formation_id=${formationId}`, {
       method: "POST",
       headers,
-      body: JSON.stringify({ newName, content: newContent, teacher: newTeacher }),
+      body: JSON.stringify({
+        name: newName,
+        content: newContent,
+        teacher: newTeacher,
+      }),
     });
   };
 
@@ -54,26 +58,33 @@ export default function EditPage() {
         <input
           type="text"
           id="content"
-          placeholder="Entrez du contenu..."/>
+          placeholder="Entrez du contenu..."
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+        />
       </div>
       <div className="descriptionContainer">
         <h2>Description</h2>
-        <p>Une description permet </p>
+        <textarea id="description">chat</textarea>
       </div>
       <div>
         <h2>Contenu</h2>
         <textarea
           type="text"
           id="content"
-          placeholder="Entrez du contenu..."
+          value={newContent}
           onChange={(e) => setNewContent(e.target.value)}
-        >{content.content}</textarea>
+        />
       </div>
       <div>
         <p>Formateur</p>
-        <select>
+        <select
+          onChange={(e) => {
+            setNewTeacher(e.target.value);
+          }}
+        >
           {teachers.map((teacher) => (
-            <option key={teacher.id}>
+            <option key={teacher.id} value={teacher.id}>
               {teacher.firstName} {teacher.lastName}
             </option>
           ))}

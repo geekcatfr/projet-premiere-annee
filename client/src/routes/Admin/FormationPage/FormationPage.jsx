@@ -178,10 +178,10 @@ function FormationTable(props) {
     <table>
       <thead>
         <tr>
-          <th>
-            <input type="checkbox" />
-          </th>
+          <th>Sélectionner</th>
           <th>Titre</th>
+          <th>Enseignant</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -190,6 +190,7 @@ function FormationTable(props) {
             key={formation.id}
             formationId={formation.id}
             title={formation.title}
+            teacher={formation.teacher}
           />
         ))}
       </tbody>
@@ -202,7 +203,7 @@ FormationTable.propTypes = {
 
 function FormationRow(props) {
   const [selected, setIsSelected] = useState(false);
-  const { formationId, title } = props;
+  const { formationId, title, teacher } = props;
 
   const deleteRequest = () => {
     fetch(`http://localhost:8000/formations/delete/${formationId}`);
@@ -217,6 +218,13 @@ function FormationRow(props) {
 
       <td>
         <p className="formation-title">{title}</p>
+      </td>
+      <td>
+        <p>
+          <Link to={`/teacher/${teacher}`}>Professeur</Link>
+        </p>
+      </td>
+      <td>
         <ul className="formation-actions">
           <li>
             <Link to={`edit/${formationId}`}>Editer</Link>

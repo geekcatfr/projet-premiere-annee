@@ -44,6 +44,6 @@ function TeachersTable({ teachers }) {
     </table>
   );
 }
-TeachersTable.propsType = {
+TeachersTable.propTypes = {
   teachers: PropTypes.array.isRequired,
 };
