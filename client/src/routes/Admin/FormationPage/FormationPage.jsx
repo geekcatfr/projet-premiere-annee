@@ -242,4 +242,5 @@ function FormationRow(props) {
 FormationRow.propTypes = {
   formationId: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
+  teacher: PropTypes.string.isRequired,
 };
