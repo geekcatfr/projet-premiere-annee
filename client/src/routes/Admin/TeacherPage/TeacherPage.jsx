@@ -8,7 +8,7 @@ export default function TeacherPage() {
     fetch("http://localhost:8000/teachers")
       .then((res) => res.json())
       .then((res) => setTeachers(res));
-  });
+  }, []);
   return (
     <div>
       <h1>Liste d'enseignants</h1>
@@ -16,12 +16,27 @@ export default function TeacherPage() {
         <option>Sélectionner...</option>
         <option>Supprimer</option>
       </select>
+      <input type="button" />
       <TeachersTable teachers={teachers} />
     </div>
   );
 }
 
 function TeachersTable({ teachers }) {
+  const deleteAction = () => {};
+  const TableRows = teachers.map((teacher) => (
+    <tr key={teacher.id}>
+      <td>
+        <input type="checkbox" />
+      </td>
+      <td>{teacher.firstName}</td>
+      <td>{teacher.lastName}</td>
+      <td className="actionBox">
+        <input onClick={deleteAction} type="button" value="Editer" />
+        <input type="button" value="Supprimer" />
+      </td>
+    </tr>
+  ));
   return (
     <table>
       <thead>
@@ -30,17 +45,7 @@ function TeachersTable({ teachers }) {
         <th>Prénom</th>
         <th>Actions</th>
       </thead>
-      <tbody>
-        {teachers.map((teacher) => (
-          <tr key={teacher.id}>
-            <td>
-              <input type="checkbox" />
-            </td>
-            <td>{teacher.firstName}</td>
-            <td>{teacher.lastName}</td>
-          </tr>
-        ))}
-      </tbody>
+      <tbody>{TableRows}</tbody>
     </table>
   );
 }

@@ -33,6 +33,11 @@ export async function sendNewTeacherReq(firstName, lastName) {
   return req;
 }
 
+export async function sendDeleteTeacherReq(id) {
+  const req = fetch(`http://localhost:8000/teachers/`);
+  return req;
+}
+
 export const addFormationAction = (formation, teacherId) => {
   fetch("http://localhost:8000/formations/add", {
     method: "POST",

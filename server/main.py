@@ -70,7 +70,7 @@ def add_formation(formation: Formation):
     if int(formation.teacher) > 0:
         db.insert_formation(formation)
         return {"added": True}
-    else: 
+    else:
         return {"error": "invalid id passed"}
 
 
@@ -99,6 +99,7 @@ def delete_formation(formation_id: int):
 def get_teachers():
     return db.get_teachers()
 
+
 @app.get("/teachers/{teacherId}")
 def get_teacher(teacherId: int):
     return db.get_teacher(teacherId)
@@ -110,8 +111,10 @@ def add_teacher(teacher: Teacher):
     return {"isAdded": True, "name": f"{teacher.first_name} {teacher.last_name}"}
 
 
-@app.post("/teachers/delete")
-def delete_user(teacher: Teacher):
+@app.get("/teachers/delete")
+def delete_user(teacherId: int):
+    if teacherId >= 0:
+        db.get_teacher()
     pass
 
 
