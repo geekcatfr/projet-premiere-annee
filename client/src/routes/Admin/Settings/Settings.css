@@ -1,0 +1,16 @@
+.formContainer {
+    margin: 1rem;
+    border: 1px solid black;
+    padding: 1.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: bottom;
+}
+
+.formContainer input[type="button"] {
+    border: none;
+    padding: 0.5rem;
+    color: var(--font-color);
+    background-color: var(--main-blue);
+}

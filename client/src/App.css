@@ -36,6 +36,10 @@ div.container {
   margin-right: 24px;
 }
 
+h2.subCategory {
+  margin-bottom: 1.25rem;
+}
+
 @media screen and (max-width: 400px) {
   .first-page-title {
     font-size: 42px;
