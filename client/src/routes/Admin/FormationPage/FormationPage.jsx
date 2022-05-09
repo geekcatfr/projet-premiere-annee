@@ -180,7 +180,7 @@ function FormationTable(props) {
         <tr>
           <th>Sélectionner</th>
           <th>Titre</th>
-          <th>Enseignant</th>
+          <th>Nom de l'enseignant</th>
           <th>Actions</th>
         </tr>
       </thead>
@@ -217,11 +217,11 @@ function FormationRow(props) {
       </td>
 
       <td>
-        <p className="formation-title">{title}</p>
+        <p>{title}</p>
       </td>
       <td>
         <p>
-          <Link to={`/teacher/${teacher}`}>Professeur</Link>
+          <Link to={`/teacher/${teacher}`}>{teacher}</Link>
         </p>
       </td>
       <td>
@@ -242,5 +242,5 @@ function FormationRow(props) {
 FormationRow.propTypes = {
   formationId: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-  teacher: PropTypes.string.isRequired,
+  teacher: PropTypes.number.isRequired,
 };
