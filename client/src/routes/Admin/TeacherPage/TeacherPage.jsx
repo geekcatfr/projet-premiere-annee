@@ -11,7 +11,7 @@ export default function TeacherPage() {
   }, []);
   return (
     <div>
-      <h1>Liste d'enseignants</h1>
+      <h1>Liste d&apos;enseignants</h1>
       <select>
         <option>Sélectionner...</option>
         <option>Supprimer</option>

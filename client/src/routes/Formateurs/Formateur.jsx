@@ -16,6 +16,20 @@ export default function FormateurPage() {
       <h1>
         {formateur.firstName} {formateur.lastName}
       </h1>
+      <formationGrid />
     </div>
   );
 }
+
+formationGrid = (formations) => {
+  return (
+    <>
+      <h2>Formations</h2>
+      <div className="formationGrid"></div>
+    </>
+  );
+};
+
+formationGrid.propTypes = {
+  formations: PropTypes,
+};

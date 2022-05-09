@@ -26,7 +26,7 @@ export default function Formation() {
   return (
     <div>
       <h1>{formation.title}</h1>
-      <Link to={`/formateurs/${teacher.id}`}>
+      <Link to={`/teacher/${teacher.id}`}>
         Formateur : {teacher.firstName} {teacher.lastName}
       </Link>
 
@@ -68,6 +68,6 @@ FormationRating.propTypes = {
   nbrPeopleRating: PropTypes.number.isRequired,
 };
 
-function DatesCalendar() {
+function DateCalendar() {
   return <></>;
 }

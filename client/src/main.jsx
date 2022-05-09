@@ -29,7 +29,7 @@ ReactDOM.render(
           <Route index element={<Home />} />
           <Route path="formations" element={<Formations />} />
           <Route path="formations/:formationId" element={<Formation />} />
-          <Route path="formateurs/:formateurId" element={<FormateurPage />} />
+          <Route path="teacher/:formateurId" element={<FormateurPage />} />
           <Route path="about" element={<About />} />
           <Route path="login" element={<Login />} />
           <Route path="admin" element={<WelcomeAdmin />} />
