@@ -1,0 +1,22 @@
+.dateButtonsAction {
+    color: white;
+    background-color: var(--main-blue);
+    display: flex;
+    gap: .75rem;
+    width: fit-content;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 11px;
+    padding: 0.35rem;
+    margin: 0.50rem;
+}
+
+.dateButtonsAction input[value="X"] {
+    background-color: unset;
+    color: white;
+    border: none;
+}
+
+.datesList {
+    list-style: none;
+}
