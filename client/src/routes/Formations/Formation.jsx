@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { React, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { fetchFormation, fetchTeachers } from "../../utils/data";
 import "./Formations.css";
@@ -26,9 +26,10 @@ export default function Formation() {
   return (
     <div>
       <h1>{formation.title}</h1>
-      <p>
+      <Link to={`/formateurs/${teacher.id}`}>
         Formateur : {teacher.firstName} {teacher.lastName}
-      </p>
+      </Link>
+
       <div className="aboutFormationWrapper">
         <h2>A propos</h2>
         <p>

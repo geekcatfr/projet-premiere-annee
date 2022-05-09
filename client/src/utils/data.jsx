@@ -11,7 +11,7 @@ export async function fetchTeachers() {
 }
 
 export const fetchTeacher = async (teacherId) => {
-  const res = await fetch(`http://localhost:8000/formations/${teacherId}`);
+  const res = await fetch(`http://localhost:8000/teachers/${teacherId}`);
   const teacher = res.json();
   return teacher;
 };
@@ -34,7 +34,7 @@ export async function sendNewTeacherReq(firstName, lastName) {
 }
 
 export async function sendDeleteTeacherReq(id) {
-  const req = fetch(`http://localhost:8000/teachers/`);
+  const req = fetch(`http://localhost:8000/teachers/delete`);
   return req;
 }
 

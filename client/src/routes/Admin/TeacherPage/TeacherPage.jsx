@@ -23,7 +23,9 @@ export default function TeacherPage() {
 }
 
 function TeachersTable({ teachers }) {
-  const deleteAction = () => {};
+  const deleteAction = (teacherId) => {
+    fetch(`http://localhost:8000/teachers/delete?teacherId=${teacherId}`);
+  };
   const TableRows = teachers.map((teacher) => (
     <tr key={teacher.id}>
       <td>
@@ -32,7 +34,11 @@ function TeachersTable({ teachers }) {
       <td>{teacher.firstName}</td>
       <td>{teacher.lastName}</td>
       <td className="actionBox">
-        <input onClick={deleteAction} type="button" value="Editer" />
+        <input
+          onClick={deleteAction(teacher.id)}
+          type="button"
+          value="Editer"
+        />
         <input type="button" value="Supprimer" />
       </td>
     </tr>

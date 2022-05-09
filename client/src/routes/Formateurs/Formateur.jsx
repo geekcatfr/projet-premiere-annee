@@ -1,15 +1,21 @@
-import { React, useEffect } from "react";
+import { React, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { fetchTeacher } from "../../utils/data";
 
 export default function FormateurPage() {
   const params = useParams();
-  const [formateurs, setFormateurs] = useState([]);
+  const [formateur, setFormateur] = useState([]);
 
-  useEffect(
-    fetchTeacher(parseInt(params, 10)).then((res) => {
-      setFormateurs(res);
-    })
+  useEffect(() => {
+    fetchTeacher(parseInt(params.formateurId, 10)).then((res) => {
+      setFormateur(res);
+    });
+  }, []);
+  return (
+    <div>
+      <h1>
+        {formateur.firstName} {formateur.lastName}
+      </h1>
+    </div>
   );
-  return <h1>Formateur</h1>;
 }
