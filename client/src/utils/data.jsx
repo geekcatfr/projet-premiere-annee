@@ -38,7 +38,11 @@ export async function sendDeleteTeacherReq(id) {
   return req;
 }
 
-export const getTeacherFormations = () => {};
+export const getTeacherFormations = async (id) => {
+  const req = await fetch(`http://localhost:8000/teachers/${id}/formations`);
+  const teacherFormations = await req.json();
+  return teacherFormations;
+};
 
 export const addFormationAction = (formation, teacherId) => {
   fetch("http://localhost:8000/formations/add", {

@@ -1,6 +1,7 @@
 import sys
 from typing import Optional
 from fastapi import FastAPI, Form
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -36,6 +37,7 @@ class Formation(BaseModel):
     description: Optional[str] = None
     content: Optional[str] = None
     teacher: Optional[str] = None
+    dates: Optional[list] = None
 
 
 db = DatabaseConnection()
@@ -66,6 +68,7 @@ def formation_content(formation_id: int):
 
 @app.post("/formations/add")
 def add_formation(formation: Formation):
+    print(formation.dates)
     if int(formation.teacher) > 0:
         db.insert_formation(formation)
         return {"added": True}
@@ -75,6 +78,7 @@ def add_formation(formation: Formation):
 
 @app.post("/formations/edit")
 def edit_formation(formation: Formation, formation_id: int):
+    print(formation.dates)
     db.update_formation(formation, formation_id)
     return {"isEdited": True}
 
@@ -130,7 +134,7 @@ def get_users():
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.check_user(user.username, user.password)
-    #token = db.get_token(user.username)
+    token = db.get_token(user.username)
     if req:
         return {"token": "aaa"}
     else:
