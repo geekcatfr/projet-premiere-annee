@@ -19,6 +19,7 @@ import Formation from "./routes/Formations/Formation";
 import SettingsPage from "./routes/Admin/Settings/SettingsPage";
 import TeacherPage from "./routes/Admin/TeacherPage/TeacherPage";
 import ManageUsers from "./routes/Admin/Settings/ManageUsers";
+import FormateurPage from "./routes/Formateurs/Formateur";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -28,6 +29,7 @@ ReactDOM.render(
           <Route index element={<Home />} />
           <Route path="formations" element={<Formations />} />
           <Route path="formations/:formationId" element={<Formation />} />
+          <Route path="formateurs/:formateurId" element={<FormateurPage />} />
           <Route path="about" element={<About />} />
           <Route path="login" element={<Login />} />
           <Route path="admin" element={<WelcomeAdmin />} />
