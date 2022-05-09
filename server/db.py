@@ -179,7 +179,7 @@ class DatabaseConnection():
 
     def check_user(self, username: str, password: str):
         select_user = (
-            f"SELECT username, password FROM users WHERE username = \"{toSHA(username)}\"")
+            f"SELECT username, password FROM users WHERE username = \"{username}\"")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
 
@@ -189,8 +189,7 @@ class DatabaseConnection():
             for user, db_pass in db_cursor:
                 if username == user and db_pass == toSHA(password):
                     return True
-                else:
-                    return False
+            return False
 
         conn.disconnect()
 
@@ -312,18 +311,44 @@ class DatabaseConnection():
         return teachers
 
     def get_teacher(self, teacherId: int):
-        get_teacher = f"SELECT first_name, last_name FROM teachers where teacher_id = {teacherId}"
+        get_teacher = f"SELECT teacher_id, first_name, last_name FROM teachers where teacher_id = {teacherId}"
         conn = self.connect()
         teacher = {}
         with conn.cursor() as cursor:
             cursor.execute(get_teacher)
 
-            for firstName, lastName in cursor:
+            for id, firstName, lastName in cursor:
+                teacher['id'] = id
                 teacher['firstName'] = firstName
                 teacher['lastName'] = lastName
+
         conn.commit()
         conn.disconnect()
         return teacher
+
+    def delete_teacher(self, teacherId: int):
+        delete_teacher = ("DELETE FROM `teachers` "
+                          f"WHERE `teacher_id` = {teacherId}")
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(delete_teacher)
+        conn.commit()
+        conn.disconnect()
+        return {"isDeleted": True}
+
+    def get_teacher_formations(self, teacherId: int):
+        getFormationsTeacher = f"SELECT * FROM `formations` WHERE teacher = {teacherId}"
+        formations = []
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(getFormationsTeacher)
+            for id, name, desc, content, teacher, grade, nbrRating in cursor:
+                formation = {"id": id, "title": name, "description": desc, "content": content,
+                             "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
+                formations.append(formation)
+        conn.disconnect()
+        return formations
+
 
 def init_rows(db_conn, db_name):
     """Init a dict of tables,

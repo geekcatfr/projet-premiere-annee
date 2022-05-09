@@ -1,4 +1,3 @@
-from ast import For
 import sys
 from typing import Optional
 from fastapi import FastAPI, Form
@@ -98,6 +97,11 @@ def delete_formation(formation_id: int):
 @app.get("/teachers")
 def get_teachers():
     return db.get_teachers()
+
+
+@app.get("/teachers/{teacherId}/formations")
+def get_teacher_formation(teacherId: int):
+    return db.get_teacher_formations(teacherId)
 
 
 @app.get("/teachers/{teacherId}")
