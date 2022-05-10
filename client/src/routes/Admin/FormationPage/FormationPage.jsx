@@ -2,28 +2,16 @@
 import { React, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { fas } from "@fortawesome/free-solid-svg-icons";
+
 import "./FormationPage.css";
 import PropTypes from "prop-types";
-import { sendNewTeacherReq, addFormationAction } from "../../../utils/data";
-
-library.add(fas);
+import { addFormationAction } from "../../../utils/data";
+import { AddTeacherButton } from "../../../components/Button/Button";
 
 export default function FormationPage() {
   const [formations, setFormations] = useState([]);
   const [error, setError] = useState(null);
   const [teachers, setTeachers] = useState([]);
-  const [isTeacherBoxToggled, setIsTeacherBoxToggled] = useState(false);
-  const [isFormationBoxToggled, setIsFormationBoxToggled] = useState(false);
-
-  const toggleTeacherBox = () => {
-    setIsTeacherBoxToggled(!isTeacherBoxToggled);
-  };
-
-  const toggleFormationBox = () => {
-    setIsFormationBoxToggled(!isFormationBoxToggled);
-  };
 
   useEffect(() => {
     fetch("http://localhost:8000/teachers")
@@ -59,25 +47,13 @@ export default function FormationPage() {
           : "Vous pouvez ajouter des formations"}
       </p>
       <div className="actions-buttons-container">
-        <button
-          onClick={toggleFormationBox}
-          className="add_formation_button"
-          type="button"
-        >
-          <FontAwesomeIcon icon="fa-solid fa-plus" />
-          <span>Ajouter une formation</span>
-        </button>
-        <button
-          onClick={toggleTeacherBox}
-          className="add_formation_button"
-          type="button"
-        >
-          <FontAwesomeIcon icon="fa-solid fa-user-pen" />
-          <span>Ajouter un professeur</span>
-        </button>
+        {teachers.length === 0 ? (
+          <AddTeacherButton />
+        ) : (
+          <AddFormationButton teachers={teachers} />
+        )}
       </div>
-      {isFormationBoxToggled ? <AddFormationBox teachers={teachers} /> : null}
-      {isTeacherBoxToggled ? <AddTeacherBox /> : null}
+
       <FormationTable formations={formations} />
       <p>
         Vous souhaitez <Link to="/admin/teachers">gérer les professeurs ?</Link>
@@ -86,45 +62,30 @@ export default function FormationPage() {
   );
 }
 
-function AddTeacherBox() {
-  const [firstName, setFirstName] = useState(null);
-  const [lastName, setLastName] = useState(null);
+function AddFormationButton({ teachers }) {
+  const [isFormationBoxToggled, setIsFormationBoxToggled] = useState(false);
 
-  const handleRequest = () => {
-    sendNewTeacherReq(firstName, lastName);
-    window.location.reload();
+  const toggleFormationBox = () => {
+    setIsFormationBoxToggled(!isFormationBoxToggled);
   };
-
-  // TODO
   return (
-    <div>
-      <h2>Nouveau professeur</h2>
-      <div className="formContainer">
-        <label htmlFor="firstName">
-          Prénom
-          <input
-            onChange={(e) => setFirstName(e.target.value)}
-            type="text"
-            id="firstName"
-            name="firstName"
-          />
-        </label>
-        <label htmlFor="lastName">
-          Nom
-          <input
-            onChange={(e) => setLastName(e.target.value)}
-            type="text"
-            id="lastName"
-            name="lastName"
-          />
-        </label>
-        <button onClick={handleRequest} type="button">
-          Envoyer
-        </button>
-      </div>
-    </div>
+    <>
+      <button
+        onClick={toggleFormationBox}
+        className="add_formation_button"
+        type="button"
+      >
+        <FontAwesomeIcon icon="fa-solid fa-plus" />
+        <span>Ajouter une formation</span>
+      </button>
+      {isFormationBoxToggled ? <AddFormationBox teachers={teachers} /> : null}
+    </>
   );
 }
+
+AddFormationButton.propTypes = {
+  teachers: PropTypes.object.isRequired,
+};
 
 function AddFormationBox({ teachers }) {
   const [formationName, setFormationName] = useState(null);
@@ -180,7 +141,7 @@ function FormationTable(props) {
         <tr>
           <th>Sélectionner</th>
           <th>Titre</th>
-          <th>Nom de l'enseignant</th>
+          <th>Nom de l&apos;enseignant</th>
           <th>Actions</th>
         </tr>
       </thead>
