@@ -89,7 +89,7 @@ def edit_formation(formation: Formation, formation_id: int):
     return {"isEdited": True}
 
 
-@app.post("/formations/edit/note")
+@app.get("/formations/edit/note")
 def update_note(formationId: int, note: int):
     if note >= 0 and note <= 5:
         db.update_note(formationId, note)
@@ -125,11 +125,10 @@ def add_teacher(teacher: Teacher):
     return {"isAdded": True, "name": f"{teacher.first_name} {teacher.last_name}"}
 
 
-@app.get("/teachers/delete")
+@app.get("/teachers/delete/{teacherId}")
 def delete_user(teacherId: int):
-    if teacherId >= 0:
-        db.get_teacher()
-    pass
+    db.delete_teacher(teacherId)
+    return {"isDeleted": True, "mich": teacherId}
 
 
 @app.get("/users")

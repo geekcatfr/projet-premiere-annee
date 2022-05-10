@@ -2,18 +2,13 @@ import PropTypes from "prop-types";
 import { React, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import {
-  fetchFormation,
-  fetchTeachers,
-  updateFormationGrade,
-} from "../../utils/data";
+import { fetchFormation, updateFormationGrade } from "../../utils/data";
 import "./Formations.css";
 
 export default function Formation() {
   const params = useParams();
   const [formation, setFormation] = useState([]);
   const [teacher, setTeacher] = useState([]);
-  const [error, setError] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {

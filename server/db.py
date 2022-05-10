@@ -94,6 +94,7 @@ def get_tables():
     tables['dates'] = ("CREATE TABLE `dates` ( "
                        "`date_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                        "`formationDate` DATE NOT NULL, "
+                       "`formationDateEnd` DATE, "
                        "formationId int, "
                        "FOREIGN KEY (`formationId`) REFERENCES formations(formation_id)"
                        ") ENGINE=InnoDB")
@@ -162,11 +163,13 @@ class DatabaseConnection():
         conn.disconnect()
 
     def delete_formation(self, formation_id: int) -> None:
-        delete_user = ("DELETE FROM `formations` "
-                       f"where `formation_id` = {formation_id}")
+        deleteFormation = ("DELETE FROM `formations` "
+                           f"where `formation_id` = {formation_id}")
+        deleteHoursReq = (
+            f"DELETE FROM `dates` WHERE `formationId` = {formation_id}")
         conn = self.connect()
         with conn.cursor() as db_cursor:
-            db_cursor.execute(delete_user)
+            db_cursor.execute(deleteFormation)
             conn.commit()
 
         conn.disconnect()
@@ -290,6 +293,7 @@ class DatabaseConnection():
                          f"WHERE formation_id = {formation_id}")
         with conn.cursor() as cursor:
             cursor.execute(updateNoteReq)
+        conn.commit()
         conn.disconnect()
 
     def get_token(self, user):
@@ -356,8 +360,19 @@ class DatabaseConnection():
     def delete_teacher(self, teacherId: int):
         delete_teacher = ("DELETE FROM `teachers` "
                           f"WHERE `teacher_id` = {teacherId}")
+        getFormationsTeacher = f"SELECT formation_id FROM `formations` WHERE teacher = {teacherId}"
+        deleteAllFormationsReq = (
+            f"DELETE FROM `formations` WHERE `teacher` = {teacherId}")
+        deleteHoursReq = ("DELETE FROM `dates` WHERE `formationId` = {}")
         conn = self.connect()
         with conn.cursor() as cursor:
+            cursor.execute(getFormationsTeacher)
+            for id in cursor:
+                cursor.execute(deleteHoursReq.format(id))
+                conn.commit()
+
+        with conn.cursor() as cursor:
+            cursor.execute(deleteAllFormationsReq)
             cursor.execute(delete_teacher)
         conn.commit()
         conn.disconnect()
