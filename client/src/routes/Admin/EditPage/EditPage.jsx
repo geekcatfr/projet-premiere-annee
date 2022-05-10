@@ -15,6 +15,9 @@ export default function EditPage() {
   const [newName, setNewName] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newTeacher, setNewTeacher] = useState(0);
+  const [newDescription, setNewDescription] = useState("");
+  const [dates, setDates] = useState([]);
+  const [userInput, setUserInput] = useState("");
 
   useEffect(() => {
     fetchFormation(formationId).then((res) => {
@@ -22,6 +25,7 @@ export default function EditPage() {
       setNewName(res.title);
       setNewContent(res.content);
       setNewTeacher(res.teacher);
+      setNewDescription(res.description);
     });
     fetchTeachers().then(
       (res) => setTeachers(res),
@@ -39,10 +43,11 @@ export default function EditPage() {
         name: newName,
         content: newContent,
         teacher: newTeacher,
+        description: newDescription,
+        dates,
       }),
     });
   };
-
   if (isLoading) {
     return <p>Récupération des données...</p>;
   }
@@ -65,7 +70,11 @@ export default function EditPage() {
       </div>
       <div className="descriptionContainer">
         <h2>Description</h2>
-        <textarea id="description">chat</textarea>
+        <textarea
+          value={newDescription}
+          onChange={(e) => setNewDescription(e.target.value)}
+          id="description"
+        />
       </div>
       <div>
         <h2>Contenu</h2>
@@ -89,6 +98,34 @@ export default function EditPage() {
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <p>Dates</p>
+        <ul className="datesList">
+          {dates.map((date) => (
+            <div className="dateButtonsAction">
+              <li>{date}</li>
+              <input
+                onClick={() => {
+                  setDates([...dates].filter((element) => element !== date));
+                }}
+                value="X"
+                type="button"
+              />
+            </div>
+          ))}
+        </ul>
+        <input
+          onChange={(e) => setUserInput(e.target.value)}
+          type="datetime-local"
+        />
+        <input
+          onClick={() => {
+            setDates([...dates, userInput]);
+          }}
+          type="button"
+          value="Ajouter une date"
+        />
       </div>
       <input onClick={handleSubmit} type="submit" />
     </div>

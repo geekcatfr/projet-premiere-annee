@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import { getUsers } from "../../../utils/login";
+import { deleteUser, getUsers } from "../../../utils/login";
 
 export default function ManageUsers() {
   const [users, setUsers] = useState([]);
@@ -25,15 +25,36 @@ export default function ManageUsers() {
 }
 
 function ManageUsersTable({ users }) {
+  const handleDeleteReq = (userId) => {
+    deleteUser(userId);
+  };
   return (
     <table>
       <thead>
         <th>Sélectionner</th>
-        <th>Nom d'utilisateur</th>
+        <th>Nom d&apos;utilisateur</th>
         <th>Administrateur ?</th>
         <th>Actions</th>
       </thead>
-      <tbody></tbody>
+      <tbody>
+        {users.map((user) => (
+          <tr key={user.id}>
+            <td>
+              <input type="checkbox" />
+            </td>
+            <td>{user.username}</td>
+            <td>{user.admin}</td>
+            <td>
+              <input type="button" value="Editer" />
+              <input
+                onClick={handleDeleteReq(user.id)}
+                type="button"
+                value="Supprimer"
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 }

@@ -37,10 +37,6 @@ export default function Login() {
       );
   };
 
-  useEffect(() => {
-    checkLoginTokenStorage() ? setisTokenSet(true) : setisTokenSet(false);
-  });
-
   if (!isTokenSet) {
     return (
       <div className="container login-container">
@@ -68,9 +64,7 @@ export default function Login() {
                 required
               />
             </label>
-            <button onClick={sendFormData} type="button">
-              Connexion
-            </button>
+            <input value="Connexion" onClick={sendFormData} type="button" />
           </div>
         </div>
       </div>

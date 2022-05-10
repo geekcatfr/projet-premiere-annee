@@ -90,6 +90,13 @@ def get_tables():
                         "`user` int, "
                         "FOREIGN KEY (`user`) REFERENCES users(user_id) "
                         ") ENGINE=InnoDB")
+
+    tables['dates'] = ("CREATE TABLE `dates` ( "
+                       "`date_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT, "
+                       "`formationDate` DATE NOT NULL, "
+                       "formationId int, "
+                       "FOREIGN KEY (`formations`) REFERENCES formations(formation_id)"
+                       ") ENGINE=InnoDB")
     return tables
 
 
@@ -149,6 +156,7 @@ class DatabaseConnection():
                              "(name, description, content, teacher, grade, number_of_ratings) "
                              f"VALUES (\"{data.name}\", \"{data.description}\", \"{data.content}\", \"{data.teacher}\", 0, 0) ")
             db_cursor.execute(add_formation)
+
             conn.commit()
 
         conn.disconnect()
@@ -173,13 +181,14 @@ class DatabaseConnection():
         conn = self.connect()
         with conn.cursor() as db_cursor:
             db_cursor.execute(edit_formation)
-            conn.commit()
 
-        conn.disconnect()
+            conn.commit()
+            conn.disconnect()
+            self.insertDate(new_formation.dates, formation_id)
 
     def check_user(self, username: str, password: str):
         select_user = (
-            f"SELECT username, password FROM users WHERE username = \"{toSHA(username)}\"")
+            f"SELECT username, password FROM users WHERE username = \"{username}\"")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
 
@@ -189,9 +198,7 @@ class DatabaseConnection():
             for user, db_pass in db_cursor:
                 if username == user and db_pass == toSHA(password):
                     return True
-                else:
-                    return False
-
+            return False
         conn.disconnect()
 
     def get_user_list(self):
@@ -237,16 +244,19 @@ class DatabaseConnection():
     def get_formation(self, formation_id):
         get_formation_req = (
             f"SELECT * from formations WHERE formation_id = {formation_id}")
+        getDatesReq = f"SELECT formationDate WHERE formation_id = {formation_id}"
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
-            db_cursor.execute(get_formation_req)
             try:
-                print(db_cursor)
-
+                db_cursor.execute(get_formation_req)
                 for id, name, desc, content, teacher, grade, nbrRating in db_cursor:
                     formation = {"id": id, "title": name, "description": desc,
                                  "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
-
+                db_cursor.execute(getDatesReq)
+                dates = []
+                for date in db_cursor:
+                    dates.append(date)
+                formation['dates'] = dates
                 conn.disconnect()
                 return formation
             except UnboundLocalError:
@@ -279,12 +289,12 @@ class DatabaseConnection():
                         "(token, validity_date, user) "
                         f"VALUES ('{token}', "
                         f"'{current_time}', {user_id})")
-        db_cursor = self.conn.cursor()
-        db_cursor.execute(f"USE {self.name}")
-        db_cursor.execute(insert_token)
+        with conn.cursor() as db_cursor:
+            db_cursor.execute(f"USE {self.name}")
+            db_cursor.execute(insert_token)
+        conn.commit()
         conn.disconnect()
-
-        return {"token": token}
+        return token
 
     def add_teacher(self, data):
         add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
@@ -312,18 +322,65 @@ class DatabaseConnection():
         return teachers
 
     def get_teacher(self, teacherId: int):
-        get_teacher = f"SELECT first_name, last_name FROM teachers where teacher_id = {teacherId}"
+        get_teacher = f"SELECT teacher_id, first_name, last_name FROM teachers where teacher_id = {teacherId}"
         conn = self.connect()
         teacher = {}
         with conn.cursor() as cursor:
             cursor.execute(get_teacher)
 
-            for firstName, lastName in cursor:
+            for id, firstName, lastName in cursor:
+                teacher['id'] = id
                 teacher['firstName'] = firstName
                 teacher['lastName'] = lastName
+
         conn.commit()
         conn.disconnect()
         return teacher
+
+    def delete_teacher(self, teacherId: int):
+        delete_teacher = ("DELETE FROM `teachers` "
+                          f"WHERE `teacher_id` = {teacherId}")
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(delete_teacher)
+        conn.commit()
+        conn.disconnect()
+        return {"isDeleted": True}
+
+    def get_teacher_formations(self, teacherId: int):
+        getFormationsTeacher = f"SELECT * FROM `formations` WHERE teacher = {teacherId}"
+        formations = []
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(getFormationsTeacher)
+            for id, name, desc, content, teacher, grade, nbrRating in cursor:
+                formation = {"id": id, "title": name, "description": desc, "content": content,
+                             "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
+                formations.append(formation)
+        conn.disconnect()
+        return formations
+
+    def insertDate(self, dateList: list, formationId: int):
+        insertDateRequest = "INSERT INTO `dates` (formationDate, formationId) VALUES (\"{}\", {})"
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            for date in dateList:
+                formattedDate = date.replace("T", " ")
+                formattedDate += ":00"
+                cursor.execute(insertDateRequest.format(
+                    formattedDate, formationId))
+                conn.commit()
+        conn.disconnect()
+
+    def deleteDate(self):
+        pass
+
+    def updateDate(self):
+        pass
+
+    def getDate(self):
+        pass
+
 
 def init_rows(db_conn, db_name):
     """Init a dict of tables,

@@ -47,8 +47,8 @@ function AddUser() {
         <label htmlFor="isAdmin">
           Rôle
           <select onChange={(e) => setIsAdmin(e.target.value)}>
-            <option value="false">Utilisateur</option>
-            <option value="true">Administrateur</option>
+            <option value={false}>Utilisateur</option>
+            <option value={true}>Administrateur</option>
           </select>
         </label>
         <input value="Ajouter" type="button" onClick={handleSubmit} />
