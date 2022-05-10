@@ -10,6 +10,7 @@ export default function Formation() {
   const [formation, setFormation] = useState([]);
   const [teacher, setTeacher] = useState([]);
   const [error, setError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     fetchFormation(parseInt(params.formationId, 10)).then((f) => {
@@ -20,9 +21,13 @@ export default function Formation() {
         .then((res) => res.json())
         .then((res) => {
           setTeacher(res);
+          setIsLoaded(true);
         });
     });
   }, []);
+  if (!isLoaded) {
+    return <p>Chargement des données en cours...</p>;
+  }
   return (
     <div>
       <h1>{formation.title}</h1>
@@ -40,6 +45,7 @@ export default function Formation() {
           )}
         </p>
       </div>
+      <FormationDates dates={formation.dates} />
       <FormationRating
         rating={formation.rating}
         nbrPeopleRating={formation.nbrPeopleRating}
@@ -68,6 +74,19 @@ FormationRating.propTypes = {
   nbrPeopleRating: PropTypes.number.isRequired,
 };
 
-function DateCalendar() {
-  return <></>;
+function FormationDates({ dates }) {
+  return (
+    <div className="datesList">
+      <h2>Date de la prochaine session</h2>
+      <ul>
+        {dates.map((date) => (
+          <li>{date}</li>
+        ))}
+      </ul>
+    </div>
+  );
 }
+
+FormationDates.propTypes = {
+  dates: PropTypes.array.isRequired,
+};
