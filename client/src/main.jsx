@@ -22,6 +22,7 @@ import Home from "./routes/Home/Home";
 import "normalize.css";
 import "./index.css";
 import "./App.css";
+import FormationByDatePage from "./routes/Formations/FormationByDate";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -31,6 +32,7 @@ ReactDOM.render(
           <Route index element={<Home />} />
           <Route path="formations" element={<Formations />} />
           <Route path="formations/:formationId" element={<Formation />} />
+          <Route path="formations/byDate/" element={<FormationByDatePage />} />
           <Route path="teacher/:formateurId" element={<FormateurPage />} />
           <Route path="about" element={<About />} />
           <Route path="login" element={<Login />} />

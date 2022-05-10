@@ -2,7 +2,11 @@ import PropTypes from "prop-types";
 import { React, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
-import { fetchFormation, fetchTeachers } from "../../utils/data";
+import {
+  fetchFormation,
+  fetchTeachers,
+  updateFormationGrade,
+} from "../../utils/data";
 import "./Formations.css";
 
 export default function Formation() {
@@ -47,6 +51,7 @@ export default function Formation() {
       </div>
       <FormationDates dates={formation.dates} />
       <FormationRating
+        formationId={parseInt(params.formationId, 10)}
         rating={formation.rating}
         nbrPeopleRating={formation.nbrPeopleRating}
       />
@@ -55,13 +60,22 @@ export default function Formation() {
 }
 
 function FormationRating(props) {
-  const { rating, nbrPeopleRating } = props;
+  const { formationId, rating, nbrPeopleRating } = props;
+  const [userGrade, setUserGrade] = useState(5);
+  const handleSendRating = () => {
+    updateFormationGrade(formationId, userGrade);
+  };
   return (
     <>
       <h2>Evaluation</h2>
       <div className="rating-form">
-        <input type="number" />
-        <input type="submit" />
+        <input
+          onChange={(e) => {
+            setUserGrade(e.target.value);
+          }}
+          type="number"
+        />
+        <input onClick={handleSendRating} value="Envoyer" type="button" />
       </div>
       <p>
         Note moyenne de {rating} étoiles avec {nbrPeopleRating} votants
@@ -70,6 +84,7 @@ function FormationRating(props) {
   );
 }
 FormationRating.propTypes = {
+  formationId: PropTypes.number.isRequired,
   rating: PropTypes.number.isRequired,
   nbrPeopleRating: PropTypes.number.isRequired,
 };

@@ -251,13 +251,13 @@ class DatabaseConnection():
         return formations_list
 
     def get_formation(self, formation_id):
-        get_formation_req = (
+        getFormationReq = (
             f"SELECT * from formations WHERE formation_id = {formation_id}")
         getDatesReq = f"SELECT formationDate from dates WHERE formationId = {formation_id}"
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
             try:
-                db_cursor.execute(get_formation_req)
+                db_cursor.execute(getFormationReq)
                 for id, name, desc, content, teacher, grade, nbrRating in db_cursor:
                     formation = {"id": id, "title": name, "description": desc,
                                  "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
@@ -274,55 +274,61 @@ class DatabaseConnection():
 
     def update_note(self, formation_id, new_note):
         conn = self.connect()
-        get_notes_req = (
+        getNotesReq = (
             f"SELECT grade, number_of_ratings FROM formations WHERE formation_id = {formation_id}")
         noteList = []
         with conn.cursor() as cursor:
-            conn.execute(get_notes_req)
-            for grade, nbrRatings in conn:
-                noteList.append(grade, nbrRatings)
-            print(noteList)
+            cursor.execute(getNotesReq)
+            for grade, nbrRatings in cursor:
+                noteList.append(grade)
+                noteList.append(nbrRatings)
+            noteList[1] += 1
+            noteList[0] = (noteList[0] + new_note) / noteList[1]
+        updateNoteReq = ("UPDATE `formations`"
+                         f"SET `grade` = {noteList[0]}, "
+                         f"`number_of_ratings` = {noteList[1]} "
+                         f"WHERE formation_id = {formation_id}")
+        with conn.cursor() as cursor:
+            cursor.execute(updateNoteReq)
         conn.disconnect()
-        update_note_req = ("UPDATE `formations`"
-                           "SET ")
 
     def get_token(self, user):
         conn = self.connect()
-        user_infos = self.get_user_infos(user)
-        user_id = user_infos["id"]
+        userInfos = self.get_user_infos(user)
+        userId = userInfos["id"]
 
         validity_time = 60  # time in minutes
         current_time = time.strftime("%y-%m-%d %H:%M:%S", time.localtime())
         token = secrets.token_hex(8)
 
-        insert_token = ("INSERT INTO `tokens` "
-                        "(token, validity_date, user) "
-                        f"VALUES ('{token}', "
-                        f"'{current_time}', {user_id})")
+        insertTokenReq = ("INSERT INTO `tokens` "
+                          "(token, validity_date, user) "
+                          f"VALUES ('{token}', "
+                          f"'{current_time}', {userId})")
         with conn.cursor() as db_cursor:
             db_cursor.execute(f"USE {self.name}")
-            db_cursor.execute(insert_token)
+            db_cursor.execute(insertTokenReq)
         conn.commit()
         conn.disconnect()
         return token
 
     def add_teacher(self, data):
-        add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
-                           f"VALUES (\"{data.first_name}\", \"{data.last_name}\")")
+        addTeacherReq = ("INSERT INTO teachers (first_name, last_name) "
+                         f"VALUES (\"{data.first_name}\", \"{data.last_name}\")")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
             db_cursor.execute(f"USE {self.name}")
-            db_cursor.execute(add_teacher_req)
+            db_cursor.execute(addTeacherReq)
         conn.commit()
         conn.disconnect()
 
     def get_teachers(self):
         teachers = []
-        get_teacher_req = (
+        getTeacherReq = (
             f"SELECT teacher_id, first_name, last_name FROM teachers")
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
-            db_cursor.execute(get_teacher_req)
+            db_cursor.execute(getTeacherReq)
 
             for id, firstName, lastName in db_cursor:
                 teachers.append(
@@ -373,7 +379,6 @@ class DatabaseConnection():
     def insertDate(self, dateList: list, formationId: int):
         insertDateRequest = "INSERT INTO `dates` (formationDate, formationId) VALUES (\"{}\", {})"
         conn = self.connect()
-        print(formationId)
         with conn.cursor() as cursor:
             for date in dateList:
                 formattedDate = date.replace("T", " ")
@@ -389,8 +394,16 @@ class DatabaseConnection():
     def updateDate(self):
         pass
 
-    def getDate(self):
-        pass
+    def getDate(self, date):
+        getDateReq = f"SELECT formationId FROM dates WHERE formationDate = \"{date}\""
+        formationsId = []
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(getDateReq)
+            for formationId in cursor:
+                formationsId.append(formationId)
+
+        return {"date": date, "formations": formationsId}
 
 
 def init_rows(db_conn, db_name):

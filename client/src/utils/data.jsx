@@ -38,6 +38,20 @@ export async function sendDeleteTeacherReq(id) {
   return req;
 }
 
+export const updateFormationGrade = async (formationId, note) => {
+  const headers = new Headers({ "Content-Type": "application/json" });
+
+  const req = await fetch(
+    `http://localhost:8000/formations/edit/note?formation=${formationId}&note=${note}`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ formationId, note }),
+    }
+  );
+  return req;
+};
+
 export const getTeacherFormations = async (id) => {
   const req = await fetch(`http://localhost:8000/teachers/${id}/formations`);
   const teacherFormations = await req.json();

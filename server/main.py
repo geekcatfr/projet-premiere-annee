@@ -67,6 +67,11 @@ def formation_content(formation_id: int):
     return db.get_formation(formation_id)
 
 
+@app.post("/formations/date")
+def searchByDate(formationDate: str):
+    return db.getDate(formationDate)
+
+
 @app.post("/formations/add")
 def add_formation(formation: Formation):
     print(formation.dates)
@@ -84,10 +89,10 @@ def edit_formation(formation: Formation, formation_id: int):
     return {"isEdited": True}
 
 
-@app.post("/formation/update_note")
-def update_note(formation: int, note: int):
+@app.post("/formations/edit/note")
+def update_note(formationId: int, note: int):
     if note >= 0 and note <= 5:
-        db.update_note(note)
+        db.update_note(formationId, note)
         return {"isSaved": True}
     else:
         return {"error": "value is not valid"}
