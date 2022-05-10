@@ -176,7 +176,7 @@ class DatabaseConnection():
                           f"SET `name` = \"{new_formation.name}\", "
                           f"`description` = \"{new_formation.description}\", "
                           f"`content` = \"{new_formation.content}\", "
-                          f"`teacher` = \"{new_formation.teacher}\" "
+                          f"`teacher` = {new_formation.teacher} "
                           f"WHERE `formation_id` = {formation_id}")
         conn = self.connect()
         with conn.cursor() as db_cursor:
@@ -226,6 +226,15 @@ class DatabaseConnection():
 
         conn.disconnect()
 
+    def deleteUser(self, userId):
+        deleteUserReq = ("DELETE FROM `users` "
+                         f"where `user_id` = {userId}")
+        conn = self.connect()
+        with conn.cursor() as cursor:
+            cursor.execute(deleteUserReq)
+            conn.commit()
+        conn.disconnect()
+
     def get_formations(self):
         get_formations_request = (
             f"SELECT formation_id, name, description, teacher, grade, number_of_ratings FROM formations")
@@ -244,7 +253,7 @@ class DatabaseConnection():
     def get_formation(self, formation_id):
         get_formation_req = (
             f"SELECT * from formations WHERE formation_id = {formation_id}")
-        getDatesReq = f"SELECT formationDate WHERE formation_id = {formation_id}"
+        getDatesReq = f"SELECT formationDate from dates WHERE formationId = {formation_id}"
         conn = self.connect()
         with conn.cursor(buffered=True) as db_cursor:
             try:
@@ -253,6 +262,7 @@ class DatabaseConnection():
                     formation = {"id": id, "title": name, "description": desc,
                                  "content": content, "teacher": teacher, "rating": grade, "nbrPeopleRating": nbrRating}
                 db_cursor.execute(getDatesReq)
+
                 dates = []
                 for date in db_cursor:
                     dates.append(date)
@@ -363,6 +373,7 @@ class DatabaseConnection():
     def insertDate(self, dateList: list, formationId: int):
         insertDateRequest = "INSERT INTO `dates` (formationDate, formationId) VALUES (\"{}\", {})"
         conn = self.connect()
+        print(formationId)
         with conn.cursor() as cursor:
             for date in dateList:
                 formattedDate = date.replace("T", " ")

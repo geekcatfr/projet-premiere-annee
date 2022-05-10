@@ -148,6 +148,7 @@ async def add_user(user: User, isAdmin: bool):
     return {"isAdded": True}
 
 
-@app.post('/users/delete')
-def delete_user(user: User):
-    pass
+@app.get('/users/delete')
+def delete_user(userId: int):
+    db.deleteUser(userId)
+    return {"isDeleted": True}
