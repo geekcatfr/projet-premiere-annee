@@ -34,7 +34,7 @@ export async function sendNewTeacherReq(firstName, lastName) {
 }
 
 export async function sendDeleteTeacherReq(id) {
-  const req = fetch(`http://localhost:8000/teachers/delete`);
+  const req = fetch(`http://localhost:8000/teachers/delete?teacherId=${id}`);
   return req;
 }
 

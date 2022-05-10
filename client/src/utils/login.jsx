@@ -20,12 +20,10 @@ export const addNewUser = (username, password, isAdmin) => {
   });
 };
 
-export const deleteUser = (userId) => {
-  const headers = new Headers({ "Content-Type": "application/json" });
-  fetch("http://localhost:8000/users/delete", {
-    method: "POST",
-    cors: "cors",
-    headers,
-    body: JSON.stringify({ userId }),
-  });
+export const deleteUser = async (userId) => {
+  const req = await fetch(
+    `http://localhost:8000/users/delete?userId=${userId}`
+  );
+  const deleteReq = await req.json();
+  return deleteReq;
 };
