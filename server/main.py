@@ -43,6 +43,7 @@ class Formation(BaseModel):
 db = DatabaseConnection()
 db.connect()
 db.init_database()
+db.insert_user('chat', 'chat', True)
 
 if (db.isConnected == False):
     writeInLog(
