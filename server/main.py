@@ -134,7 +134,7 @@ def get_users():
 @app.post('/users/login/')
 def login_user(user: User):
     req = db.check_user(user.username, user.password)
-    token = db.get_token(user.username)
+    #token = db.get_token(user.username)
     if req:
         return {"token": "aaa"}
     else:

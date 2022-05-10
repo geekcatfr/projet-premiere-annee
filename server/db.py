@@ -95,7 +95,7 @@ def get_tables():
                        "`date_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                        "`formationDate` DATE NOT NULL, "
                        "formationId int, "
-                       "FOREIGN KEY (`formations`) REFERENCES formations(formation_id)"
+                       "FOREIGN KEY (`formationId`) REFERENCES formations(formation_id)"
                        ") ENGINE=InnoDB")
     return tables
 
