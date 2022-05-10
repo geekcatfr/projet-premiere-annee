@@ -1,7 +1,8 @@
+from lib2to3.pgen2 import token
 import sys
 from typing import Optional
-from fastapi import FastAPI, Form
-from fastapi.security import OAuth2PasswordBearer
+from fastapi import Depends, FastAPI, Form
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
@@ -12,6 +13,8 @@ app = FastAPI()
 origins = [
     "http://localhost:3000"
 ]
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 app.add_middleware(
     CORSMiddleware,
@@ -67,7 +70,7 @@ def formation_content(formation_id: int):
 
 
 @app.post("/formations/add")
-def add_formation(formation: Formation):
+def add_formation(formation: Formation, token: str = Depends(oauth2_scheme)):
     print(formation.dates)
     if int(formation.teacher) > 0:
         db.insert_formation(formation)
@@ -77,7 +80,7 @@ def add_formation(formation: Formation):
 
 
 @app.post("/formations/edit")
-def edit_formation(formation: Formation, formation_id: int):
+def edit_formation(formation: Formation, formation_id: int, token: str = Depends(oauth2_scheme)):
     print(formation.dates)
     db.update_formation(formation, formation_id)
     return {"isEdited": True}
@@ -93,7 +96,7 @@ def update_note(formation: int, note: int):
 
 
 @app.get("/formations/delete/{formation_id}")
-def delete_formation(formation_id: int):
+def delete_formation(formation_id: int, token: str = Depends(oauth2_scheme)):
     db.delete_formation(formation_id)
     return {"isDeleted": True}
 
@@ -114,13 +117,13 @@ def get_teacher(teacherId: int):
 
 
 @app.post("/teachers/add")
-def add_teacher(teacher: Teacher):
+def add_teacher(teacher: Teacher, token: str = Depends(oauth2_scheme)):
     db.add_teacher(teacher)
     return {"isAdded": True, "name": f"{teacher.first_name} {teacher.last_name}"}
 
 
 @app.get("/teachers/delete")
-def delete_user(teacherId: int):
+def delete_user(teacherId: int, token: str = Depends(oauth2_scheme)):
     if teacherId >= 0:
         db.get_teacher()
     pass
@@ -131,22 +134,23 @@ def get_users():
     return db.get_user_list()
 
 
-@app.post('/users/login/')
-def login_user(user: User):
-    req = db.check_user(user.username, user.password)
+@app.post('/token')
+async def login_user(formData: OAuth2PasswordRequestForm = Depends()):
+    """req = db.check_user(user.username, user.password)
     token = db.get_token(user.username)
     if req:
         return {"token": "aaa"}
     else:
-        return {"error": "incorrect user login or password."}
+        return {"error": "incorrect user login or password."}"""
+    pass
 
 
 @app.post('/users/add')
-async def add_user(user: User, isAdmin: bool):
+async def add_user(user: User, isAdmin: bool, token: str = Depends(oauth2_scheme)):
     db.insert_user(user.username, user.password, isAdmin)
     return {"isAdded": True}
 
 
 @app.post('/users/delete')
-def delete_user(user: User):
+def delete_user(user: User, token: str = Depends(oauth2_scheme)):
     pass
