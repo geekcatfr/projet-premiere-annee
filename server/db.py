@@ -162,7 +162,7 @@ class DatabaseConnection():
 
         conn.disconnect()
 
-    def delete_formation(self, formation_id: int) -> None:
+    def delete_formation(self, formation_id: int):
         deleteFormation = ("DELETE FROM `formations` "
                            f"where `formation_id` = {formation_id}")
         deleteHoursReq = (
