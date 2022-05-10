@@ -26,6 +26,7 @@ export default function FormateurPage() {
       <h1>
         {formateur.firstName} {formateur.lastName}
       </h1>
+      <p>Formations de ce formateur : {coursesTeacher.length}</p>
       <FormationGrid formations={coursesTeacher} />
     </div>
   );
