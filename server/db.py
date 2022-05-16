@@ -4,10 +4,12 @@ from mysql.connector import errorcode
 
 import json
 import time
-import hashlib
+
+from security import getPasswordHash
+from utils import writeInLog
 
 
-def loadCredentials(id_file: str):
+def loadDbCredentials(id_file: str):
     """id_file should be a string
     containing the name of the file with credentials in it. """
     with open(id_file) as f:
@@ -29,25 +31,6 @@ def update_database() -> None:
     tables = get_tables()
 
     pass
-
-
-def toSHA(val: str):
-    hashedValue = hashlib.sha256()
-    hashedValue.update(val.encode())
-    return hashedValue.hexdigest()
-
-
-def writeInLog(error: str):
-    """Takes an error in str format as argument, writes in db.log the error with formatted time."""
-    log_file = "db.log"
-    error = str(error)
-    current_time = time.strftime("%H:%M:%S", time.localtime())
-    try:
-        with open(log_file, 'a') as logfile:
-            logfile.write(f"{current_time} \"{error}\"\n")
-    except FileNotFoundError:
-        print(f"[NOTE] File {log_file} doesn't exist. Creating it...")
-        open(log_file, 'x').close()
 
 
 def get_tables():
@@ -103,7 +86,7 @@ def get_tables():
 class DatabaseConnection():
 
     def __init__(self):
-        self.config, self.db_creds = loadCredentials('db_id.json')
+        self.config, self.db_creds = loadDbCredentials('db_id.json')
         self.name = self.config['database']
         self.isConnected = False
 
@@ -144,7 +127,6 @@ class DatabaseConnection():
         conn = self.connect()
         with conn.cursor() as cursor:
             cursor.fetchall()
-        pass
 
     def export(self):
         pass
@@ -158,7 +140,6 @@ class DatabaseConnection():
             db_cursor.execute(add_formation)
 
             conn.commit()
-
         conn.disconnect()
 
     def delete_formation(self, formation_id: int) -> None:
@@ -168,7 +149,6 @@ class DatabaseConnection():
         with conn.cursor() as db_cursor:
             db_cursor.execute(delete_user)
             conn.commit()
-
         conn.disconnect()
 
     def update_formation(self, new_formation, formation_id):
@@ -181,7 +161,6 @@ class DatabaseConnection():
         conn = self.connect()
         with conn.cursor() as db_cursor:
             db_cursor.execute(edit_formation)
-
             conn.commit()
             conn.disconnect()
             self.insertDate(new_formation.dates, formation_id)
@@ -194,12 +173,10 @@ class DatabaseConnection():
 
             db_cursor.execute(f"USE {self.name}")
             db_cursor.execute(select_user)
-
             for user, db_pass in db_cursor:
-                if username == user and db_pass == toSHA(password):
+                if username == user and db_pass == getPasswordHash(password):
                     return True
             return False
-        conn.disconnect()
 
     def get_user_list(self):
         get_id_request = (
@@ -219,7 +196,7 @@ class DatabaseConnection():
             with conn.cursor() as db_cursor:
                 add_user = ("INSERT INTO users "
                             "(username, password, is_admin) "
-                            f"VALUES (\"{user}\", \"{toSHA(password)}\", {isAdmin})")
+                            f"VALUES (\"{user}\", \"{getPasswordHash(password)}\", {isAdmin})")
 
                 db_cursor.execute(add_user)
                 conn.commit()

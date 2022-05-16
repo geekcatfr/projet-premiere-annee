@@ -1,12 +1,13 @@
-from lib2to3.pgen2 import token
 import sys
 from typing import Optional
-from fastapi import Depends, FastAPI, Form
+from fastapi import Depends, HTTPException, FastAPI
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
-from db import DatabaseConnection, writeInLog
+from db import DatabaseConnection
+from utils import writeInLog
+from security import createKeyConfigFile
 
 app = FastAPI()
 
@@ -23,6 +24,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class Token(BaseModel):
+    token: str
+    type: str
 
 
 class User(BaseModel):
@@ -45,7 +51,13 @@ class Formation(BaseModel):
 
 db = DatabaseConnection()
 db.connect()
-db.init_database()
+
+
+def init_application():
+    db.init_database()
+    createKeyConfigFile()
+    writeInLog("Initialised the application.")
+
 
 if (db.isConnected == False):
     writeInLog(
@@ -136,13 +148,12 @@ def get_users():
 
 @app.post('/token')
 async def login_user(formData: OAuth2PasswordRequestForm = Depends()):
-    """req = db.check_user(user.username, user.password)
-    token = db.get_token(user.username)
-    if req:
-        return {"token": "aaa"}
+    req = db.check_user(formData.username, formData.password)
+    if not req:
+        raise HTTPException(
+            status_code=400, detail="Incorrect name or password")
     else:
-        return {"error": "incorrect user login or password."}"""
-    pass
+        return {"token": "", "token_type": "bearer"}
 
 
 @app.post('/users/add')
