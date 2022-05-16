@@ -154,5 +154,7 @@ cython_debug/
 launch.json
 .vscode
 server/db_id.json
+server/private.json
 
 .gitignore
+
