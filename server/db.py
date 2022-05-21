@@ -5,8 +5,8 @@ from mysql.connector import errorcode
 import json
 import time
 
-from security import getPasswordHash
-from utils import writeInLog
+from security import get_password_hash
+from utils import write_in_log
 
 
 def loadDbCredentials(id_file: str):
@@ -97,7 +97,7 @@ class DatabaseConnection():
             self.isConnected = True
             return conn
         except mysql.connector.Error as error:
-            writeInLog(error)
+            write_in_log(error)
             if error.errno == errorcode.ER_ACCESS_DENIED_ERROR:
                 print("Something is wrong with your user name or password")
             elif error.errno == errorcode.ER_BAD_DB_ERROR:
@@ -115,7 +115,7 @@ class DatabaseConnection():
                 db_cursor = conn.cursor()
             except mysql.connector.Error as error:
                 if error.errno == errorcode.ER_BAD_DB_ERROR:
-                    writeInLog(error)
+                    write_in_log(error)
                     print(
                         f"[NOTE] Database {self.name} doesn't exist. Creating it...")
                     create_database(self.name, db_cursor)
@@ -163,9 +163,9 @@ class DatabaseConnection():
             db_cursor.execute(edit_formation)
             conn.commit()
             conn.disconnect()
-            self.insertDate(new_formation.dates, formation_id)
+            self.insert_date(new_formation.dates, formation_id)
 
-    def check_user(self, username: str, password: str):
+    def get_user_password(self, username: str):
         select_user = (
             f"SELECT username, password FROM users WHERE username = \"{username}\"")
         conn = self.connect()
@@ -174,8 +174,8 @@ class DatabaseConnection():
             db_cursor.execute(f"USE {self.name}")
             db_cursor.execute(select_user)
             for user, db_pass in db_cursor:
-                if username == user and db_pass == getPasswordHash(password):
-                    return True
+                if username == user:
+                    return (user, db_pass)
             return False
 
     def get_user_list(self):
@@ -196,7 +196,7 @@ class DatabaseConnection():
             with conn.cursor() as db_cursor:
                 add_user = ("INSERT INTO users "
                             "(username, password, is_admin) "
-                            f"VALUES (\"{user}\", \"{getPasswordHash(password)}\", {isAdmin})")
+                            f"VALUES (\"{user}\", \"{get_password_hash(password)}\", {isAdmin})")
 
                 db_cursor.execute(add_user)
                 conn.commit()
@@ -252,26 +252,6 @@ class DatabaseConnection():
         conn.disconnect()
         update_note_req = ("UPDATE `formations`"
                            "SET ")
-
-    def get_token(self, user):
-        conn = self.connect()
-        user_infos = self.get_user_infos(user)
-        user_id = user_infos["id"]
-
-        validity_time = 60  # time in minutes
-        current_time = time.strftime("%y-%m-%d %H:%M:%S", time.localtime())
-        token = secrets.token_hex(8)
-
-        insert_token = ("INSERT INTO `tokens` "
-                        "(token, validity_date, user) "
-                        f"VALUES ('{token}', "
-                        f"'{current_time}', {user_id})")
-        with conn.cursor() as db_cursor:
-            db_cursor.execute(f"USE {self.name}")
-            db_cursor.execute(insert_token)
-        conn.commit()
-        conn.disconnect()
-        return token
 
     def add_teacher(self, data):
         add_teacher_req = ("INSERT INTO teachers (first_name, last_name) "
@@ -337,7 +317,7 @@ class DatabaseConnection():
         conn.disconnect()
         return formations
 
-    def insertDate(self, dateList: list, formationId: int):
+    def insert_date(self, dateList: list, formationId: int):
         insertDateRequest = "INSERT INTO `dates` (formationDate, formationId) VALUES (\"{}\", {})"
         conn = self.connect()
         with conn.cursor() as cursor:
@@ -349,13 +329,13 @@ class DatabaseConnection():
                 conn.commit()
         conn.disconnect()
 
-    def deleteDate(self):
+    def delete_date(self):
         pass
 
-    def updateDate(self):
+    def update_date(self):
         pass
 
-    def getDate(self):
+    def get_date(self):
         pass
 
 
@@ -375,7 +355,7 @@ def init_rows(db_conn, db_name):
         except mysql.connector.Error as error:
             if error == errorcode.ER_TABLE_EXISTS_ERROR:
                 print(f"{table} exists.")
-                writeInLog(f"{table} already exists. {error}")
+                write_in_log(f"{table} already exists. {error}")
             else:
                 print(error)
-                writeInLog(error)
+                write_in_log(error)
