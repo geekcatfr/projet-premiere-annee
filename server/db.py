@@ -66,14 +66,6 @@ def get_tables():
                        "`content` TEXT NOT NULL"
                        ") ENGINE=InnoDB")
 
-    tables['tokens'] = ("CREATE TABLE `tokens` ( "
-                        "`token_id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT, "
-                        "`token` varchar(20) NOT NULL, "
-                        "`validity_date` DATETIME NOT NULL, "
-                        "`user` int, "
-                        "FOREIGN KEY (`user`) REFERENCES users(user_id) "
-                        ") ENGINE=InnoDB")
-
     tables['dates'] = ("CREATE TABLE `dates` ( "
                        "`date_id` int NOT NULL PRIMARY KEY AUTO_INCREMENT, "
                        "`formationDate` DATE NOT NULL, "
