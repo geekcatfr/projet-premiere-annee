@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { React, useEffect, useState } from "react";
 
 import Logo from "../../assets/icons/logo-ndlp.png";
 import { checkLoginTokenStorage } from "../../utils/login";
@@ -12,14 +12,15 @@ export default function Login() {
 
   const sendFormData = async () => {
     const headers = new Headers({
-      "Content-Type": "application/json",
+      accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     });
 
-    const req = await fetch("http://127.0.0.1:8000/users/login", {
+    const req = await fetch(`http://127.0.0.1:8000/token`, {
       method: "POST",
       mode: "cors",
       headers,
-      body: JSON.stringify({ username: user, password }),
+      body: `?grant_type=&username=${user}&password=${password}&scope=&client_id=&client_secret=`,
     })
       .then((res) => res.json())
       .then(
@@ -39,33 +40,31 @@ export default function Login() {
 
   if (!isTokenSet) {
     return (
-      <div className="container login-container">
-        <div className="login">
-          <img className="login-logo" src={Logo} alt="Logo NDLP" />
-          <h1>Connexion</h1>
-          <div className="form-content">
-            <label htmlFor="username">
-              Nom d&apos;utilisateur :
-              <input
-                type="text"
-                name="username"
-                id="username"
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </label>
-            <label htmlFor="password">
-              Mot de passe :
-              <input
-                type="password"
-                name="password"
-                onChange={(e) => setPassword(e.target.value)}
-                id="password"
-                required
-              />
-            </label>
-            <input value="Connexion" onClick={sendFormData} type="button" />
-          </div>
+      <div className="login-container login">
+        <img src={Logo} alt="Logo NDLP" />
+        <h1>Connexion</h1>
+        <div className="form-content">
+          <label htmlFor="username">
+            Nom d&apos;utilisateur
+            <input
+              type="text"
+              name="username"
+              id="username"
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
+          <label htmlFor="password">
+            Mot de passe
+            <input
+              type="password"
+              name="password"
+              onChange={(e) => setPassword(e.target.value)}
+              id="password"
+              required
+            />
+          </label>
+          <input value="Connexion" onClick={sendFormData} type="button" />
         </div>
       </div>
     );
