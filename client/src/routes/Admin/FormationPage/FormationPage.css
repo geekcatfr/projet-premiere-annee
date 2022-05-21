@@ -11,15 +11,12 @@ input[type="checkbox"] {
 
 table {
   padding: 15px;
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   width: 100%;
-  border-collapse: collapse;
- 
 }
 
 .formation-row {
   border-top: 1px solid #000;
-  
 }
 
 .formation-title {
@@ -28,7 +25,7 @@ table {
 }
 
 .solid {
-  background-color: #C4C4C4;
+  background-color: #c4c4c4;
   width: 130px;
   height: 100vh;
   align-items: flex-absolute;
@@ -46,7 +43,18 @@ button.add_formation_button {
   background-color: var(--main-blue);
 }
 
-.formation-action-buttons {
+.actions-buttons-container {
   display: flex;
   gap: 1.25rem;
+}
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.75em;
+}
+
+.bottom-action-bar {
+  padding: 0.75em 0;
 }

@@ -10,13 +10,17 @@ export default function TeacherPage() {
       .then((res) => setTeachers(res));
   }, []);
   return (
-    <div>
+    <div className="container">
       <h1>Liste d&apos;enseignants</h1>
-      <select>
-        <option>Sélectionner...</option>
-        <option>Supprimer</option>
-      </select>
-      <input type="button" />
+      <div className="action-bar">
+        <div className="action-selector">
+          <select>
+            <option>Sélectionner...</option>
+            <option>Supprimer</option>
+          </select>
+          <input type="button" value="Appliquer" />
+        </div>
+      </div>
       <TeachersTable teachers={teachers} />
     </div>
   );

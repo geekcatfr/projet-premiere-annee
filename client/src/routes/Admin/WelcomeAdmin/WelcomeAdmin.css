@@ -16,7 +16,7 @@
   background-color: #0d2b78;
   padding: 50px;
   justify-self: center;
-  width: 291px;
+  min-width: 291px;
   font-size: 30px;
   text-align: center;
   align-items: center;
@@ -26,10 +26,11 @@
 .container {
   justify-content: center;
   flex-flow: column;
-  align-items: center;
 }
 
-.welcome {
+.admin-panel {
+  min-height: calc(100vh - 100px) !important;
+  align-items: center;
   font-size: 30px;
 }
 
@@ -37,14 +38,26 @@
   background-color: #0d2b78;
   width: 130px;
   height: 100vh;
-  align-items: flex-absolute;
   justify-content: flex-start;
   position: fixed;
   top: 0px;
   left: 0px;
 }
 
+.welcome-splash {
+  position: relative;
+  bottom: 10%;
+  padding: 0.75em;
+}
+
+.welcome-splash p:first-child {
+  font-weight: bold;
+}
+
 @media screen and (max-width: 800px) {
+  .welcome-splash {
+    padding: 0.75em;
+  }
   .button-grid {
     grid-template-columns: repeat(1, 1fr);
   }

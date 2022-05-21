@@ -50,38 +50,42 @@ export default function FormationPage() {
     return <p>Impossible de charger le contenu de la page</p>;
   }
   return (
-    <div>
+    <div className="container">
       <h1>Formations</h1>
-
-      <p>
-        {teachers.length === 0
-          ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
-          : "Vous pouvez ajouter des formations"}
-      </p>
-      <div className="actions-buttons-container">
-        <button
-          onClick={toggleFormationBox}
-          className="add_formation_button"
-          type="button"
-        >
-          <FontAwesomeIcon icon="fa-solid fa-plus" />
-          <span>Ajouter une formation</span>
-        </button>
-        <button
-          onClick={toggleTeacherBox}
-          className="add_formation_button"
-          type="button"
-        >
-          <FontAwesomeIcon icon="fa-solid fa-user-pen" />
-          <span>Ajouter un professeur</span>
-        </button>
+      <div className="action-bar">
+        <p>
+          {teachers.length === 0
+            ? "Aucun professeur existe actuellement. Commencez par en ajouter un !"
+            : "Vous pouvez ajouter des formations"}
+        </p>
+        <div className="actions-buttons-container">
+          <button
+            onClick={toggleFormationBox}
+            className="add_formation_button"
+            type="button"
+          >
+            <FontAwesomeIcon icon="fa-solid fa-plus" />
+            <span>Ajouter une formation</span>
+          </button>
+          <button
+            onClick={toggleTeacherBox}
+            className="add_formation_button"
+            type="button"
+          >
+            <FontAwesomeIcon icon="fa-solid fa-user-pen" />
+            <span>Ajouter un professeur</span>
+          </button>
+        </div>
       </div>
       {isFormationBoxToggled ? <AddFormationBox teachers={teachers} /> : null}
       {isTeacherBoxToggled ? <AddTeacherBox /> : null}
       <FormationTable formations={formations} />
-      <p>
-        Vous souhaitez <Link to="/admin/teachers">gérer les professeurs ?</Link>
-      </p>
+      <div className="bottom-action-bar">
+        <p>
+          Vous souhaitez{" "}
+          <Link to="/admin/teachers">gérer les professeurs ?</Link>
+        </p>
+      </div>
     </div>
   );
 }

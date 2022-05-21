@@ -13,36 +13,32 @@ form {
   margin-bottom: 10px;
 }
 
-input[type="text"],
-input[type="password"] {
-  width: fit-content;
-  border: 1px solid black;
-  height: 1.5rem;
-  border-radius: 22px;
-}
-
-.login {
-  align-items: center;
+label {
   display: flex;
   flex-flow: column;
-  justify-content: center;
-  text-align: center;
+  gap: 0.75em;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+  padding: 0.75em;
+  width: fit-content;
+  border: 1px solid black;
+  height: 2rem;
 }
 
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-flow: column;
+  text-align: center;
+  height: calc(100vh - 100px);
 }
 
-.login-logo {
-  width: 32px;
-}
-
-input[type="submit"] {
+.login-container input[type="button"] {
   padding: 16px;
   background-color: var(--main-blue);
-  border-radius: 22px;
   border: 0;
   color: white;
 }

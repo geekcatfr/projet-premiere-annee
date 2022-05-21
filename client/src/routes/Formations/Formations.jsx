@@ -42,7 +42,7 @@ export default function Formations() {
     );
   }
   return (
-    <div className="formation-wrapper">
+    <div className="container">
       <h1>Formations</h1>
       <FormationGrid formations={formations} />
     </div>

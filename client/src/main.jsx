@@ -23,6 +23,8 @@ import "normalize.css";
 import "./index.css";
 import "./App.css";
 
+const root = document.getElementById("fcpro-root");
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -47,5 +49,5 @@ ReactDOM.render(
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById("fcpro-root")
+  root
 );
