@@ -46,7 +46,7 @@ class Formation(BaseModel):
     name: str
     description: Optional[str] = None
     content: Optional[str] = None
-    teacher: Optional[str] = None
+    teacher: str
     dates: Optional[list] = None
 
 
