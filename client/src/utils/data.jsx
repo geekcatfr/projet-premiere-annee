@@ -23,7 +23,10 @@ export async function fetchFormation(formationId) {
 }
 
 export async function sendNewTeacherReq(firstName, lastName) {
-  const headers = new Headers({ "Content-Type": "application/json" });
+  const headers = new Headers({
+    "Content-Type": "application/json",
+    Authorization: "Bearer undefined",
+  });
 
   const req = await fetch("http://localhost:8000/teachers/add", {
     method: "POST",
