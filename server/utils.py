@@ -1,12 +1,23 @@
-from security import createKeyConfigFile
+from security import create_key_file
 import time
+import json
 
 
-def checkConfiguration():
-    pass
+def load_config_file():
+    config = None
+    with open('config.json', 'r') as f:
+        config = json.load(f)
+    return config
 
 
-def writeInLog(error: str):
+def set_config_values(param_name: str, value):
+    new_config = load_config_file()
+    new_config[param_name] = value
+    with open('config.json', 'w') as f:
+        json.dump(new_config, f, indent=4)
+
+
+def write_in_log(error: str):
     """Takes an error in str format as argument, writes in db.log the error with formatted time."""
     log_file = "db.log"
     error = str(error)
