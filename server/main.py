@@ -1,3 +1,4 @@
+from datetime import timedelta
 import sys
 from typing import Optional
 from fastapi import Depends, HTTPException, FastAPI
@@ -6,8 +7,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from db import DatabaseConnection
-from utils import writeInLog
-from security import createKeyConfigFile
+from utils import write_in_log, load_config_file, set_config_values
+from security import check_password, create_key_file, generate_user_token
 
 app = FastAPI()
 
@@ -50,17 +51,24 @@ class Formation(BaseModel):
 
 
 db = DatabaseConnection()
+config = load_config_file()
 db.connect()
 
 
 def init_application():
     db.init_database()
-    createKeyConfigFile()
-    writeInLog("Initialised the application.")
+    create_key_file()
+    db.insert_user("admin", "admin", 1)
+    write_in_log("Initialised the application.")
+
+
+if (db.isConnected == False and config["setup"] == False):
+    init_application()
+    set_config_values("setup", False)
 
 
 if (db.isConnected == False):
-    writeInLog(
+    write_in_log(
         "MySQL server is either not running or wrong credentials have been entered in the db_id.json file.")
     sys.exit("Database connexion error.")
 
@@ -103,14 +111,13 @@ def update_note(formation: int, note: int):
     if note >= 0 and note <= 5:
         db.update_note(note)
         return {"isSaved": True}
-    else:
-        return {"error": "value is not valid"}
+    return {"detail": "value is not valid"}
 
 
 @app.get("/formations/delete/{formation_id}")
 def delete_formation(formation_id: int, token: str = Depends(oauth2_scheme)):
     db.delete_formation(formation_id)
-    return {"isDeleted": True}
+    return {"detail": "The formation is successfully deleted."}
 
 
 @app.get("/teachers")
@@ -131,7 +138,7 @@ def get_teacher(teacherId: int):
 @app.post("/teachers/add")
 def add_teacher(teacher: Teacher, token: str = Depends(oauth2_scheme)):
     db.add_teacher(teacher)
-    return {"isAdded": True, "name": f"{teacher.first_name} {teacher.last_name}"}
+    return {"detail": "the formation is added.", "name": f"{teacher.first_name} {teacher.last_name}"}
 
 
 @app.get("/teachers/delete")
@@ -146,14 +153,18 @@ def get_users():
     return db.get_user_list()
 
 
-@app.post('/token')
+@app.post('/token', response_model=Token)
 async def login_user(formData: OAuth2PasswordRequestForm = Depends()):
-    req = db.check_user(formData.username, formData.password)
-    if not req:
+    username, password = db.get_user_password(formData.username)
+    status = check_password(formData.password, password)
+    print(password)
+    if not status:
         raise HTTPException(
             status_code=400, detail="Incorrect name or password")
-    else:
-        return {"token": "", "token_type": "bearer"}
+    token_expires = timedelta(minutes=30)
+    token = generate_user_token(
+        data={"sub": username}, expires_delta=token_expires)
+    return {"token": token, "type": "bearer"}
 
 
 @app.post('/users/add')
